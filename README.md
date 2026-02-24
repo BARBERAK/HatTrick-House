@@ -17,9 +17,9 @@ We are building a **Sports Betting Platform** that integrates real-time data fro
 - **Betting System**: A secure and responsive system for placing live bets with notifications on odds changes and results.
 - **Analytics & Statistics**: Detailed insights and stats to help users make informed betting decisions based on historical performance and trends.
 
-## Topic: Sports Betting Platform
+## Topic: *Sports Betting Platform*
 
-## Entities: Users – Sports – Leagues – Teams – Matches – Bets – Odds
+## Entities: *Users – Sports – Leagues – Teams – Matches – Bets – Odds*
 
 The system manages live sports betting with real-time data integration.
 
