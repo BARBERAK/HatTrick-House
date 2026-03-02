@@ -9,3 +9,6 @@
 
 # Django
 db.sqlite3
+
+#api key
+api-key.txt
