@@ -17,3 +17,10 @@ THE ODDS API.md
 __pycache__/
 *.py[cod]
 *$py.class
+
+#Ejemplos de datos que nos devuelve la API para no gastar tokens en pruebas
+test_bd
+
+#Docker
+docker-compose.yml
+Dockerfile
