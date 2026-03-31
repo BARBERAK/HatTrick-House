@@ -12,3 +12,8 @@ db.sqlite3
 
 #api key
 api-key.txt
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
