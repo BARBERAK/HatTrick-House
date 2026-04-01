@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}All Games - HatTrick House{% endblock %}
+
+{% block content %}
+<h1>All Games</h1>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+    {% for game in games %}
+        <div style="border: 1px solid #333; padding: 15px; border-radius: 8px; background-color: #f9f9f9;">
+            
+            <h2 style="margin-top: 0;">{{ game.home_team }} vs {{ game.away_team }}</h2>
+            
+            <p>
+                <strong>Liga:</strong> {{ game.league }} <br>
+                <strong>Deporte:</strong> {{ game.sport_key }} <br>
+                <strong>Fecha:</strong> {{ game.game_date|date:"d/m/Y H:i" }}
+            </p>
+            
+            <div style="background-color: #e0e0e0; padding: 10px; border-radius: 5px;">
+                <strong>Cuotas (1 X 2):</strong>
+                <ul style="margin: 5px 0 0 0;">
+                    <li>Gana Local: <strong>{{ game.home_price }}</strong></li>
+                    <li>Empate: <strong>{{ game.draw_price }}</strong></li>
+                    <li>Gana Visitante: <strong>{{ game.away_price }}</strong></li>
+                </ul>
+            </div>
+
+            <p style="font-size: 0.8em; color: gray; margin-bottom: 0;">
+                ID de la API: {{ game.game_id }}
+            </p>
+            
+        </div>
+    {% empty %}
+        <p>No games yet. ¡Tu base de datos está vacía! Asegúrate de ejecutar tu script de services.py para llenarla.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

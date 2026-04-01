@@ -1,13 +1,17 @@
-{% load static %} 
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Blog{% endblock %}</title>  <!-- child templates override this -->
-    <link rel="stylesheet" href="{% static 'apuestas/style.css' %}">  <!-- generates /static/blog/style.css -->
+    <title>{% block title %}HatTrick House{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'apuestas/style.css' %}">
 </head>
 <body>
+    <nav>
+        <a href="{% url 'apuestas:home' %}">Home</a>
+        <a href="{% url 'apuestas:games_list' %}">Games</a>
+    </nav>
 
     <div class="container">
         {% block content %}{% endblock %}

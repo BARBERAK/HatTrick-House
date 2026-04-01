@@ -24,3 +24,6 @@ test_bd
 #Docker
 docker-compose.yml
 Dockerfile
+
+#migrations
+/apuestas/migrations
