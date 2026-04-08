@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: burlywood;
+    padding: 15px 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Important perque el centre no es desplaci*/
+.nav-left, .nav-right {
+    flex: 1px;
+}
+
+.nav-right{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+/*BOTON DEL LOGO A LA DERECHA*/
+.logo{
+    font-size: 23px;
+    font-weight: 800;
+    text-decoration: none;
+    /*color:  Falta decidir el color que fiquem*/ 
+    letter-spacing: 1px;
+}
+
+/*BOTONES CENTRALES COMO DEPORTES*/
+.nav-sports{
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+.nav-sports:hover, .nav-deposit:hover {
+  color: #5e91ca;
+}
+
+/* BOTONES IZQUIERDA COMO INGRESAR Y LOGIN*/
+.nav-deposit{
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.nav-login{
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    color: black;
+    background-color: aliceblue;
+    padding: 7px 14px;
+    border-radius: 8px;
+}
+.nav-login:hover{
+    background-color: #5e91ca;
+    transform: translateY(-2px);
+}
