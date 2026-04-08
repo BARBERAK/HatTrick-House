@@ -12,7 +12,7 @@ URL_CHAMPIONS_LEAGUE = "https://api.the-odds-api.com/v4/sports/soccer_uefa_champ
 
 PROVA1 = "test_bd/prova1.json"
 
-def fetch_data():
+def fetch_data(url_league=URL_LA_LIGA):
     # parametros para acceder a la API:
     parms = {
         "apiKey" : "6a4aaab34aee9c66694cadfd83b395d2",
@@ -20,8 +20,13 @@ def fetch_data():
         "markets" : "h2h",
         "oddsFormat" : "decimal"
     }
-    response = requests.get(URL_LA_LIGA, params=parms)
-    return response.json()
+    response = requests.get(url_league, params=parms)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        # TO DO:
+        # controlar error
+        return None
 
 def fetch_data_debug():
     PROVA2 = "test_bd/api_output_data.json"
@@ -40,7 +45,8 @@ def convert_timezone(game_date):
     return spain_time.time()
 
 
-def clean_data_spanish_league(data):
+
+def clean_data_league(data):
     games_list = []
     
     for simple_data in data:
@@ -77,6 +83,7 @@ def clean_data_spanish_league(data):
         games_list.append(game_dict)
     
     return games_list
+    
 
 
 def save_to_db(games_list):
@@ -111,10 +118,10 @@ def save_to_db(games_list):
 def execute_update_api():
     data = fetch_data_debug()
     
-    spanish_games_list = clean_data_spanish_league(data)
+    games_list = clean_data_league(data)
     
     #enviamos los datos limpios a la bd
-    save_to_db(spanish_games_list)
+    save_to_db(games_list)
 
     return True
 
