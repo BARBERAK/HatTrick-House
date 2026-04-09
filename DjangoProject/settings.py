@@ -117,5 +117,5 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-LOGIN_REDIRECT_URL = '/apuestas/'
-LOGOUT_REDIRECT_URL = '/apuestas/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

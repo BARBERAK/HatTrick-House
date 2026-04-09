@@ -45,7 +45,7 @@ body {
   color: #5e91ca;
 }
 
-/* BOTONES IZQUIERDA COMO INGRESAR Y LOGIN*/
+/* BOTONES DERECHA COMO INGRESAR, LOGIN, LOGOUT*/
 .nav-deposit{
     font-size: 18px;
     font-weight: 600;
@@ -65,5 +65,16 @@ body {
 }
 .nav-login:hover{
     background-color: #5e91ca;
+    transform: translateY(-2px);
+}
+
+.nav-logout{
+    font-size: 14px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 7px;
+}
+.nav-logout:hover{
+    background-color: #cd5c5c;
     transform: translateY(-2px);
 }
