@@ -1,80 +1,137 @@
+/* ==========================================================================
+   HATTRICK HOUSE - ESTILOS PRINCIPALES
+   ==========================================================================
+   ÍNDICE:
+   1. Variables (Colores, tipografías)
+   2. Reseteo y Estilos Base (body, h1, p)
+   3. Utilidades Generales (Contenedores, botones)
+   4. Componentes Globales
+      4.1. Barra de Navegación (Nav)
+      4.2. Pie de Página (Footer)
+   5. Vistas / Páginas
+      5.1. Inicio (Home)
+      5.2. Login / Registro
+      5.3. Lista de Apuestas (Games)
+   ========================================================================== */
+
+/* =========================================
+   1. VARIABLES
+   ========================================= */
+/* TODO: Definir paleta de colores corporativos más adelante */
+
+
+/* =========================================
+   2. RESETEO Y ESTILOS BASE
+   ========================================= */
 body {
   margin: 0;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+
+/* =========================================
+   3. UTILIDADES GENERALES
+   ========================================= */
+/* Aquí irán clases como .container, .btn-primary, etc. */
+
+
+/* =========================================
+   4. COMPONENTES GLOBALES
+   ========================================= */
+
+/* --- 4.1. Barra de Navegación (Nav) --- */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: burlywood;
-    padding: 15px 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: burlywood; /* TODO: Cambiar por color definitivo */
+  padding: 15px 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Important perque el centre no es desplaci*/
+/* Truco Flexbox: Da el mismo "peso" a los extremos para que el centro no se desplace */
 .nav-left, .nav-right {
-    flex: 1px;
+  flex: 1; 
 }
 
-.nav-right{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 20px;
+/* Alinea el bloque derecho al final y separa sus botones */
+.nav-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
 }
 
-/*BOTON DEL LOGO A LA DERECHA*/
-.logo{
-    font-size: 23px;
-    font-weight: 800;
-    text-decoration: none;
-    /*color:  Falta decidir el color que fiquem*/ 
-    letter-spacing: 1px;
+/* -- Enlaces y Botones del Nav -- */
+
+/* Logo (Izquierda) */
+.logo {
+  font-size: 23px;
+  font-weight: 800;
+  text-decoration: none;
+  /* color: TODO: Falta decidir el color que ponemos */ 
+  letter-spacing: 1px;
 }
 
-/*BOTONES CENTRALES COMO DEPORTES*/
-.nav-sports{
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: 0.5px;
-    transition: color 0.3s ease;
+/* Enlaces Centrales (Deportes, etc.) */
+.nav-sports {
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
 }
+
+/* Botón de Ingresar Saldo (Derecha) */
+.nav-deposit {
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+/* Efecto hover compartido para enlaces de texto */
 .nav-sports:hover, .nav-deposit:hover {
   color: #5e91ca;
 }
 
-/* BOTONES DERECHA COMO INGRESAR, LOGIN, LOGOUT*/
-.nav-deposit{
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: 0.5px;
+/* Botón de Login (Derecha - Destacado) */
+.nav-login {
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  color: black;
+  background-color: aliceblue;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.nav-login{
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    letter-spacing: 0.5px;
-    color: black;
-    background-color: aliceblue;
-    padding: 7px 14px;
-    border-radius: 8px;
-}
-.nav-login:hover{
-    background-color: #5e91ca;
-    transform: translateY(-2px);
+.nav-login:hover {
+  background-color: #5e91ca;
+  transform: translateY(-2px);
 }
 
-.nav-logout{
-    font-size: 14px;
-    padding: 5px 10px;
-    text-decoration: none;
-    border-radius: 7px;
+/* Botón de Cerrar Sesión (Derecha) */
+.nav-logout {
+  font-size: 14px;
+  padding: 5px 10px;
+  text-decoration: none;
+  border-radius: 7px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border: none; /* Asegura que no tenga bordes por ser un <button> */
+  cursor: pointer;
 }
-.nav-logout:hover{
-    background-color: #cd5c5c;
-    transform: translateY(-2px);
+
+.nav-logout:hover {
+  background-color: #cd5c5c;
+  transform: translateY(-2px);
+  color: white; /* Para que contraste con el fondo rojo */
 }
+
+/* =========================================
+   5. VISTAS / PÁGINAS
+   ========================================= */
+/* Aquí empezaremos a meter los estilos específicos de home.html, login.html... */
