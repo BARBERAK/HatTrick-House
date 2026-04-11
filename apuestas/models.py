@@ -15,7 +15,7 @@ class Game(models.Model):
     #las apuestas relacionadas a ese partido:
     home_price = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     away_price = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    draw_price = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    draw_price = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True, blank=True)
     
     #la date de ese partido: 
     game_date = models.DateTimeField()
