@@ -1,0 +1,43 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block title %}Inicio - HatTrick House{% endblock %} 
+{% block content %} <div class="hero-section">
+
+<!--BARRA DE BÚSQUEDA-->
+<div class ="search-bar">
+    <form action="#" method="get" class="search-form">
+        <input type="text" name="q" placeholder="Buscar equipos, partidos, ..." class="search-input">
+        <button type="submit" class="search-button">🔎</button>
+    </form>
+</div>
+
+<!--BOTONES-->
+<div class="sports-categories">
+    <div class="div-grid">
+        <a href="#" class="league-card">
+            <img src="{% static 'apuestas/img/laliga.png' %}" alt="La Liga">
+        </a>
+        <a href="#" class="league-card">
+            <img src="{% static 'apuestas/img/premier_league.png' %}" alt="Premier League">
+        </a>
+        <a href="#" class="league-card">
+            <img src="{% static 'apuestas/img/champions_league.png' %}" alt="Champions League">
+        </a>
+        <a href="#" class="league-card">
+            <img src="{% static 'apuestas/img/serie_a.png' %}" alt="Serie A">
+        </a>
+        
+        <a href="#" class="league-card">
+            <img src="{% static 'apuestas/img/nba.png' %}" alt="NBA">
+        </a>
+        
+        <a href="#" class="league-card">
+            <img src="{% static 'apuestas/img/tenis.png' %}" alt="Tenis">
+        </a>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

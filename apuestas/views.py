@@ -7,7 +7,7 @@ from .services import execute_update_api
 
 def home(request):
     """Home page view."""
-    return render(request, 'base.html')
+    return render(request, 'apuestas/home.html')
 
 class GameListView(ListView):
     model = Game

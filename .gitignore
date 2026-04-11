@@ -27,3 +27,6 @@ Dockerfile
 
 #migrations
 /apuestas/migrations
+
+#images
+static/apuestas/img/
