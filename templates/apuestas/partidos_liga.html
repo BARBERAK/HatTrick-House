@@ -5,7 +5,17 @@
 {% block content %}
 
 <div class="partidos-completos">
-    <h2>{{liga_seleccionada}}</h2>
+    
+    {% if categoria == 'soccer' %}
+        <h2>{{liga_seleccionada}} ⚽️</h2>
+
+    {% elif categoria == 'basketball' %}
+        <h2>{{liga_seleccionada}} 🏀</h2>
+
+    {% elif categoria == 'tenis' %}
+        <h2>{{liga_seleccionada}} 🎾</h2>
+    {% endif %}
+        
     {% for partido in partidos %}
     <div class="datos-completos">
 

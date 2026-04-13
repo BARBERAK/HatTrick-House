@@ -23,7 +23,7 @@ def create_update(request):
         <a href='/'>Volver al inicio</a>
     """)
     
-def partidos_liga(request, nombre_liga):
+def partidos_liga(request, nombre_liga, categoria):
     dict_ligas = {
         "La Liga - Spain" : "La Liga",
         "premier_league" : "Premier League",
@@ -36,6 +36,7 @@ def partidos_liga(request, nombre_liga):
     partidos_filtrados = Game.objects.filter(league__icontains=termino_busqueda)
     context = {
         'liga_seleccionada' : nombre_liga.upper(),
+        'categoria' : categoria,
         'partidos' : partidos_filtrados
     }
     

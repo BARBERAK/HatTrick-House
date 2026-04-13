@@ -21,4 +21,4 @@ class Game(models.Model):
     game_date = models.DateTimeField()
     
     def __str__(self):
-        return f"{self.local_team} vs {self.away_team}"
+        return f"{self.home_team} vs {self.away_team}"

@@ -14,24 +14,24 @@
 <!--BOTONES-->
 <div class="sports-categories">
     <div class="div-grid">
-        <a href="{% url 'apuestas:partidos_liga' 'la liga'%}" class="league-card">
+        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'la liga'%}" class="league-card">
             <img src="{% static 'apuestas/img/laliga.png' %}" alt="La Liga">
         </a>
-        <a href="{% url 'apuestas:partidos_liga' 'premier league'%}" class="league-card">
+        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'premier league' %}" class="league-card">
             <img src="{% static 'apuestas/img/premier_league.png' %}" alt="Premier League">
         </a>
-        <a href="{% url 'apuestas:partidos_liga' 'champions league'%}" class="league-card">
+        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'champions league' %}" class="league-card">
             <img src="{% static 'apuestas/img/champions_league.png' %}" alt="Champions League">
         </a>
-        <a href="{% url 'apuestas:partidos_liga' 'serie a'%}" class="league-card">
+        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'serie a' %}" class="league-card">
             <img src="{% static 'apuestas/img/serie_a.png' %}" alt="Serie A">
         </a>
         
-        <a href="{% url 'apuestas:partidos_liga' 'NBA'%}" class="league-card">
+        <a href="{% url 'apuestas:partidos_liga' 'basketball' 'NBA' %}" class="league-card">
             <img src="{% static 'apuestas/img/nba.png' %}" alt="NBA">
         </a>
         
-        <a href="{% url 'apuestas:partidos_liga' 'tenis'%}" class="league-card">
+        <a href="{% url 'apuestas:partidos_liga' 'tenis' 'tenis'%}" class="league-card">
             <img src="{% static 'apuestas/img/tenis.png' %}" alt="Tenis">
         </a>
     </div>
