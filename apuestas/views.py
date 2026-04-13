@@ -24,7 +24,19 @@ def create_update(request):
     """)
     
 def partidos_liga(request, nombre_liga):
-    context = {
-        'liga_seleccionada' : nombre_liga.upper()
+    dict_ligas = {
+        "La Liga - Spain" : "La Liga",
+        "premier_league" : "Premier League",
+        "champions_league" : "Champions League",
+        "NBA" : "NBA",
     }
+    
+    termino_busqueda = dict_ligas.get(nombre_liga, nombre_liga)
+    
+    partidos_filtrados = Game.objects.filter(league__icontains=termino_busqueda)
+    context = {
+        'liga_seleccionada' : nombre_liga.upper(),
+        'partidos' : partidos_filtrados
+    }
+    
     return render(request, 'apuestas/partidos_liga.html' , context=context)

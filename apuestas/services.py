@@ -138,7 +138,6 @@ def execute_update_api():
             print(f"Advertencia: No se obtuvieron datos para la url {value}")
         
     #enviamos los datos limpios a la bd
-    print(games_list)
     save_to_db(games_list)
 
     return True

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Partidos de {{ liga_seleccionada }} - HatTrick House{% endblock %}
+
+{% block content %}
+
+<div class="partidos-completos">
+    <h2>{{liga_seleccionada}}</h2>
+    {% for partido in partidos %}
+    <div class="datos-completos">
+
+        <div class="partido-concreto">
+            <span class="dia-partido"><strong>{{ partido.game_date|date:"D d M - H:i" }}</strong></span>
+            <span class="equipo-local">{{ partido.home_team }}</span>
+            <span class="equipo-visitante">{{ partido.away_team }}</span>
+        </div>
+
+        <div class="cuota-partido">
+            <div class="boton-cuota">
+                <span class="etiqueta">1</span>
+                <span class="valor">{{partido.home_price}}</span>
+            </div>
+            <div class="boton-cuota">
+                <span class="etiqueta">X</span>
+                <span class="valor">
+                    {% if partido.draw_price %}
+                        {{ partido.draw_price }}
+                    {% else %}
+                        - {% endif %}
+                </span>
+            </div>
+            <div class="boton-cuota">
+                <span class="etiqueta">2</span>
+                <span class="valor">{{partido.away_price}}</span>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+

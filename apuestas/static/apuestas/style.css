@@ -236,3 +236,66 @@ body {
   height: 100%;
   object-fit: contain;
 }
+
+/* =========================================
+   VISTA PAGINA APUESTA
+   ========================================= */
+
+.partidos-completos{
+  max-width: 900px;
+  margin:  40px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.datos-completos{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  background-color: #d1d5db;
+}
+
+.partido-concreto{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  border-right: 2px solid #434547;
+  padding-right: 20px;
+}
+
+.dia-partido{
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.cuota-partido{
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  gap: 12px;
+  margin-left: 20px;
+}
+
+.boton-cuota{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.boton-cuota:hover{
+  transform: translateY(-2px);
+  background-color: #b7b9bc;
+}
+
+.etiqueta{
+  font-weight: 600;
+}
