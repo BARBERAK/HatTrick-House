@@ -19,7 +19,8 @@
         </div>
         <div class="nav-right">
             {% if user.is_authenticated%}
-                <a href="" class="nav-deposit">Ingresar</a>
+                <span class="nav-saldo">Saldo {{user.userprofile.money}} €</span>
+                <a href="#" class="nav-deposit">Ingresar</a>
                 <form action="{% url 'logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="nav-logout">Cerrar Sessión</button>

@@ -132,6 +132,11 @@ body {
   color: white; /* Para que contraste con el fondo rojo */
 }
 
+.nav-saldo{
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 
 /* =========================================
    BARRA DE BÚSQUEDA
