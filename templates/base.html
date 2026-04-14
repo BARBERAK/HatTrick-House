@@ -15,12 +15,12 @@
             <a href="{% url 'apuestas:home' %}" class="logo">HatTrick House</a>
         </div>
         <div class="nav-center">
-            <a href="{% url 'apuestas:games_list' %}" class="nav-sports">Deportes</a>
+            <a href="{% url 'apuestas:games_list' %}" class="nav-sports">Mis Apuestas</a>
         </div>
         <div class="nav-right">
             {% if user.is_authenticated%}
                 <span class="nav-saldo">Saldo {{user.userprofile.money}} €</span>
-                <a href="#" class="nav-deposit">Ingresar</a>
+                <a href="{% url 'apuestas:ingresar' %}" class="nav-deposit">Ingresar</a>
                 <form action="{% url 'logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="nav-logout">Cerrar Sessión</button>

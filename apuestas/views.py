@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from django.views.generic import DetailView, ListView
-
+from django.contrib.auth.decorators import login_required
 from .models import Game
 from .services import execute_update_api
 
@@ -41,3 +41,7 @@ def partidos_liga(request, nombre_liga, categoria):
     }
     
     return render(request, 'apuestas/partidos_liga.html' , context=context)
+
+@login_required
+def ingresar(request):
+    return render(request, 'apuestas/deposit.html')

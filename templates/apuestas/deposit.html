@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}HatTrick House - Ingresar{% endblock %}
+
+{% block content %}
+    <div class="deposit-container">
+        <h2>Añadir Fondos</h2>
+        <div class="fast-buttons">
+            <button type="button" class="definied-button" data-valor="10">10€</button>
+            <button type="button" class="definied-button" data-valor="20">20€</button>
+            <button type="button" class="definied-button" data-valor="50">50€</button>
+            <button type="button" class="definied-button" data-valor="100">100€</button>
+        </div>
+        <div class="specific-part">
+            <form action="#" method="post" class="form-deposit">
+                {% csrf_token %}
+                <input type="number" id="input-quantity" min="1" name="quantity" placeholder="Introduce cantidad a Ingresar" class="amount-to-enter" required>
+                <button type="submit" class="deposit-button">Ingresar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const fastButtons = document.querySelectorAll('.definied-button');
+        const textSpace = document.getElementById('input-quantity');
+
+        fastButtons.forEach(button => {
+            button.addEventListener('click', function(){
+                textSpace.value = this.getAttribute('data-valor')
+            });
+        });
+    </script>
+{% endblock %}

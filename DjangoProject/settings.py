@@ -119,3 +119,6 @@ STATIC_URL = 'static/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+#sitio donde mando los usuarios que no estan logeados y quieren ingresar
+LOGIN_URL = 'login'
