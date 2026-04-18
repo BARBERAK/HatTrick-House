@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} HatTrick House - Register {% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <h2>Registrate</h2>
+    <form method="POST" class="form-register">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="div-register-errors">
+                Por favor, revisa los errores de abajo.
+            </div>
+        {% endif %}
+        <div class="div-register-user">
+            {{form.username}}
+            {% if form.username.errors %}
+                <span style="color: red; font-size: 13px;">{{ form.username.errors.0 }}</span>
+            {% endif %}
+        </div>
+        <div class="div-register-password">
+            {{form.password1}}
+            {% if form.password1.errors %}
+                <p style="color: red; font-size: 13px;">{{ form.password1.errors.0 }}</p>
+            {% endif %}
+        </div>
+        <div class="div-register-password">
+            {{form.password2}}
+            {% if form.password2.errors %}
+                <p style="color: red; font-size: 13px;">{{ form.password2.errors.0 }}</p>
+            {% endif %}
+        </div>
+        <button type="submit" class="register-button">Registro</button>
+    </form>
+    <a href="{% url 'login' %}" class="nav-login-register">Ya tienes cuenta?</a>
+</div>
+{% endblock %}

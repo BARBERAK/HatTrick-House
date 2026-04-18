@@ -26,6 +26,7 @@
                     <button type="submit" class="nav-logout">Cerrar Sessión</button>
                 </form>
             {% else %}
+                <a href="{% url 'apuestas:registrar' %}" class="nav-register">Registrarse</a>
                 <a href="{% url 'login' %}" class="nav-login">Login</a>
             {% endif %}
         </div>

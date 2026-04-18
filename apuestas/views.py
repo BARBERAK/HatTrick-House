@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import login_required
 from .models import Game
+from .forms import CustomUserCreationForm
 from .services import execute_update_api
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -51,7 +52,7 @@ def ingresar(request):
 
 def register(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             # guardamos usuario a la BD automaticamente
             form.save()
@@ -59,7 +60,7 @@ def register(request):
             messages.success(request, f"Cuenta {username} creada correctamente!")
             return redirect('login')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     
-    return render(request, 'apuestas/register.html', {'form' : form})
+    return render(request, 'registration/register.html', {'form' : form})
             
