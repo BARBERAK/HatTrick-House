@@ -1,8 +1,10 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import login_required
 from .models import Game
 from .services import execute_update_api
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
 
 
 def home(request):
@@ -45,3 +47,19 @@ def partidos_liga(request, nombre_liga, categoria):
 @login_required
 def ingresar(request):
     return render(request, 'apuestas/deposit.html')
+
+
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # guardamos usuario a la BD automaticamente
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f"Cuenta {username} creada correctamente!")
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'apuestas/register.html', {'form' : form})
+            

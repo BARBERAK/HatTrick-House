@@ -38,8 +38,9 @@ def fetch_data(url_league=URL_LA_LIGA):
     if response.status_code == 200:
         return response.json()
     else:
-        # TO DO:
-        # controlar error
+        print(f"ERROR al intentar cargar {url_league} \n")
+        print(f"STATUS CODE: {response.status_code} \n")
+        print(f"REASON: {response.reason}")
         return None
 
 def fetch_data_debug(url_league):
@@ -130,8 +131,9 @@ def save_to_db(games_list):
     
 def execute_update_api():
     games_list = []
-    for value in dict_proba.values():
-        data = fetch_data_debug(value)
+    for value in dict_leagues.values():
+        #data = fetch_data_debug(value)
+        data = fetch_data(value)
         if data:
             games_list.extend(clean_data_league(data))
         else:
