@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    # arrancar el servidor permitiendo conexiones externas
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      # Sincronizamos el código local con el contenedor
+      - .:/app
+    ports:
+      # Conecta el puerto 8000 de tu PC con el 8000 del contenedor
+      - "8000:8000"
+    env_file:
+      # Cargamos las variables secretas
+      - .env

@@ -30,3 +30,6 @@ Dockerfile
 
 #images
 static/apuestas/img/
+
+#no subir claves ni cosas importantes
+.env
