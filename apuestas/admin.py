@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Game, UserProfile
+from .models import Game, UserProfile, Bet
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
@@ -32,3 +32,8 @@ class UserAdmin(BaseUserAdmin):
     
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+@admin.register(Bet)
+class BetAdmin(admin.ModelAdmin):
+    list_display = ('user', 'game', 'amount', 'created_at') 
+    list_filter = ('created_at',)

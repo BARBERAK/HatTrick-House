@@ -126,5 +126,3 @@ LOGOUT_REDIRECT_URL = '/'
 
 #sitio donde mando los usuarios que no estan logeados y quieren ingresar
 LOGIN_URL = 'login'
-
-print(f"ATENCIÓN: EL DEBUG AHORA MISMO ES: {DEBUG}")

@@ -48,3 +48,13 @@ def create_user_profile(sender, instance, created, **kwargs):
     #usuario nuevo:
     if created:
         UserProfile.objects.create(user = instance)
+        
+        
+class Bet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Apuesta de {self.user.username} en {self.game}"
