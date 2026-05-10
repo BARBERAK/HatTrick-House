@@ -468,3 +468,56 @@ body {
 .nav-login-register {
   text-decoration: none;
 }
+
+
+/* =========================================
+   BOLETO PARA REALIZAR APUESTA
+   ========================================= */
+
+.bet-slip{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 50px;
+}
+
+.info-partido-seleccionado {
+  width: 100%;
+  margin-bottom: 6px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.form-apuesta-total {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+}
+
+.input-cantidad-apostar{
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 1px solid #777;
+  width: 200px;
+  height: 45px;
+  text-align: center;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.boton-realizara-apuesta{
+  box-sizing: border-box;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #777;
+  cursor: pointer;
+  width: 200px;
+  height: 45px;
+  background-color: #efefef;
+  vertical-align: middle;
+}

@@ -1,0 +1,22 @@
+
+<div class="bet-slip" id="cajon-boleto" style="display: none;">
+    
+    <div class="info-partido-seleccionado">
+        <p id="boleto-partido">Ningún partido seleccionado</p>
+        <p>Tu elección: <strong id="boleto-eleccion">-</strong></p>
+    </div>
+
+    <form action="#" method="POST" class="form-apuesta-total">
+        {% csrf_token %}
+        <input type="hidden" name="game_id" id="hidden-game-id">
+        <input type="hidden" name="seleccion" id="hidden-seleccion">
+        <input type="hidden" name="cuota" id="hidden-cuota">
+
+        <p>Cuota: <strong id="boleto-cuota">0.00</strong></p>
+        
+        <p>Ganancia potencial: <strong id="boleto-ganancia">0.00 €</strong></p>
+        <input type="number" name="cantidad" id="input-dinero" class="input-cantidad-apostar" placeholder="Cantidad a Apostar (€)" min="0" required>
+        <input type="submit" class="boton-realizara-apuesta" value="REALIZAR APUESTA">
+    </form>
+
+</div>

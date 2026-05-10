@@ -26,20 +26,34 @@
         </div>
 
         <div class="cuota-partido">
-            <div class="boton-cuota">
+            <div class="boton-cuota js-apuesta"
+                data-game-id="{{partido.game_id}}"
+                data-match="{{partido.home_team}} vs {{partido.away_team}}"
+                data-price="{{partido.home_price}}"
+                data-selection="1">
                 <span class="etiqueta">1</span>
                 <span class="valor">{{partido.home_price}}</span>
             </div>
-            <div class="boton-cuota">
-                <span class="etiqueta">X</span>
-                <span class="valor">
-                    {% if partido.draw_price %}
-                        {{ partido.draw_price }}
-                    {% else %}
-                        - {% endif %}
-                </span>
-            </div>
-            <div class="boton-cuota">
+            {% if partido.draw_price %}
+                <div class="boton-cuota js-apuesta"
+                    data-game-id="{{partido.game_id}}"
+                    data-match="{{partido.home_team}} vs {{partido.away_team}}"
+                    data-price="{{partido.draw_price}}"
+                    data-selection="X">
+                    <span class="etiqueta">X</span>
+                    <span class="valor">{{ partido.draw_price }}</span>
+                </div>
+            {% else %}
+                <div class="boton-cuota">
+                    <span class="etiqueta">X</span>
+                    <span class="valor">-</span>
+                </div>
+            {% endif %}
+            <div class="boton-cuota js-apuesta"
+                data-game-id="{{partido.game_id}}"
+                data-match="{{partido.home_team}} vs {{partido.away_team}}"
+                data-price="{{partido.away_price}}"
+                data-selection="2">
                 <span class="etiqueta">2</span>
                 <span class="valor">{{partido.away_price}}</span>
             </div>
@@ -48,6 +62,61 @@
     </div>
     {% endfor %}
 </div>
+
+{% include 'apuestas/bet_slip.html'%}
 {% endblock %}
 
+{% block scripts %}
+    {% if user.is_authenticated%}
+        <script>
+            //cuando el usuario hace clic en la cuota
+            $(document).ready(function(){
+                $('.js-apuesta').click(function(){
+                    let gameId = $(this).data('game-id');
+                    let match = $(this).data('match');
+                    let price = parseFloat($(this).data('price'));
+                    let selection = $(this).data('selection');
+
+                    let equipoSeleccionado = "";
+                    let equipos = match.split(" vs "); 
+
+                    if (selection == "1") {
+                        equipoSeleccionado = equipos[0];
+                    } else if (selection == "X") {
+                        equipoSeleccionado = "Empate";
+                    } else if (selection == "2") {
+                        equipoSeleccionado = equipos[1];
+                    }
+
+                    //actualizamos interfaz
+                    $('#boleto-partido').text(match);
+                    $('#boleto-eleccion').text(equipoSeleccionado);
+                    $('#boleto-cuota').text(price.toFixed(2));
+
+                    //rellenamos los input hidden para enviarlos luego.
+                    $('#hidden-game-id').val(gameId);
+                    $('#hidden-seleccion').val(selection);
+                    $('#hidden-cuota').val(price);
+
+                    $('#cajon-boleto').slideDown();
+                    //reiniciamos valores por si habia algo escrito
+                    $('#input-dinero').val('');
+                    $('#boleto-ganancia').text('0.00 €');
+                });
+                //cuando el usuario cambia la cantidad que apostará le muestra la nueva ganancia
+                $('#input-dinero').on('input' , function(){
+                    let quantity = parseFloat($(this).val());
+                    let price = parseFloat($('#hidden-cuota').val());
+
+                    if(quantity > 0 && price > 0){
+                        let profit = quantity * price;
+                        $('#boleto-ganancia').text(profit.toFixed(2) + ' €');
+                    }else{
+                        $('#boleto-ganancia').text('0.00 €');
+                    }
+                });
+            })
+        </script>
+    {% endif %}
+{% endblock %}
 
