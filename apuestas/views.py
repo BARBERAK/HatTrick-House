@@ -6,6 +6,7 @@ from .forms import CustomUserCreationForm
 from .services import execute_update_api
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from decimal import Decimal
 
 
 def home(request):
@@ -47,6 +48,15 @@ def partidos_liga(request, nombre_liga, categoria):
 
 @login_required
 def ingresar(request):
+    if request.method == "POST":
+        quantity = Decimal(request.POST.get('quantity'))
+        
+        if quantity > 0:
+            user_profile = request.user.userprofile
+            user_profile.money += quantity
+            user_profile.save()
+            return redirect('apuestas:home')
+            
     return render(request, 'apuestas/deposit.html')
 
 
