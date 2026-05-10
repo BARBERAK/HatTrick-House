@@ -6,7 +6,7 @@
         <p>Tu elección: <strong id="boleto-eleccion">-</strong></p>
     </div>
 
-    <form action="#" method="POST" class="form-apuesta-total">
+    <form action="{% url 'apuestas:realizar_apuesta'%}" method="POST" class="form-apuesta-total">
         {% csrf_token %}
         <input type="hidden" name="game_id" id="hidden-game-id">
         <input type="hidden" name="seleccion" id="hidden-seleccion">

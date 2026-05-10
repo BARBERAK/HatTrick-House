@@ -12,7 +12,7 @@
             <button type="button" class="definied-button" data-valor="100">100€</button>
         </div>
         <div class="specific-part">
-            <form action="#" method="post" class="form-deposit">
+            <form action="{% url 'apuestas:ingresar' %}" method="post" class="form-deposit">
                 {% csrf_token %}
                 <input type="number" id="input-quantity" min="1" name="quantity" placeholder="Introduce cantidad a Ingresar" class="amount-to-enter" required>
                 <button type="submit" class="deposit-button">Ingresar</button>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import login_required
-from .models import Game
+from .models import Game, Bet, UserProfile
 from .forms import CustomUserCreationForm
 from .services import execute_update_api
 from django.contrib import messages
@@ -73,4 +73,48 @@ def register(request):
         form = CustomUserCreationForm()
     
     return render(request, 'registration/register.html', {'form' : form})
+
+@login_required
+def realizar_apuesta(request):
+    if request.method == "POST":
+        game_id = request.POST.get("game_id")
+        selection = request.POST.get("seleccion")
+        price = Decimal(request.POST.get("cuota"))
+        quantity = Decimal(request.POST.get("cantidad"))
+        
+        # si algo falta abortamos: 
+        if not all([game_id, selection, price, quantity]):
+            messages.error(request, "Error: Faltan datos en el boleto.")
+            return redirect('apuestas:home')
+        
+        # si el dinero apostar es incorrecto, abortamos:
+        if quantity <= 0:
+            messages.error(request, "La cantidad a apostar debe ser mayor que cero.")
+            return redirect('apuestas:home')
+        
+        user_profile = request.user.userprofile
+        
+        if quantity > user_profile.money:
+            messages.error(request, "El usuario no tiene suficiente dinero para realizar esta apuesta.")
+            return redirect('apuestas:home')
+        
+        user_profile.money -= quantity
+        user_profile.save()
+        
+        Bet.objects.create(
+            user = request.user,
+            game_id = game_id,
+            amount = quantity,
+            selection = selection,
+            price = price
+        )
+        
+        messages.success(request, f"¡Apuesta de {quantity}€ realizada con éxito!")
+        return redirect('apuestas:games_list')
+    
+    return redirect('apuestas:home')
+        
+        
+            
+            
             
