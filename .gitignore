@@ -6,6 +6,7 @@
 # IDE
 .vscode
 .idea/
+.DS_Store
 
 # Django
 db.sqlite3
