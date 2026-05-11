@@ -6,7 +6,7 @@ app_name = 'apuestas'
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('apuestas/', views.GameListView.as_view(), name='games_list'),
+    path('apuestas/', views.BetListView.as_view(), name='bets_list'),
     path('update_data/', views.create_update, name="update_data"),
     path('partidos/<str:categoria>/<str:nombre_liga>/', views.partidos_liga, name="partidos_liga"),
     path('ingresar/', views.ingresar, name='ingresar'),

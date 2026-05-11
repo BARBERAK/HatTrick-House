@@ -7,16 +7,21 @@ from .services import execute_update_api
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from decimal import Decimal
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def home(request):
     """Home page view."""
     return render(request, 'apuestas/home.html')
 
-class GameListView(ListView):
-    model = Game
-    template_name = 'apuestas/game_list.html'
-    context_object_name = 'games'
+class BetListView(LoginRequiredMixin,ListView):
+    model = Bet
+    template_name = 'apuestas/bet_list.html'
+    context_object_name = 'bets'
+    
+    # Sobrescribimos esta función para filtrar las apuestas
+    def get_queryset(self):
+        return Bet.objects.filter(user=self.request.user).order_by('-created_at')
     
 def create_update(request):
     execute_update_api()
@@ -30,21 +35,19 @@ def create_update(request):
 def partidos_liga(request, nombre_liga, categoria):
     dict_ligas = {
         "La Liga - Spain" : "La Liga",
-        "premier_league" : "Premier League",
+        "premier league" : "EPL",
         "champions_league" : "Champions League",
         "NBA" : "NBA",
     }
-    
     termino_busqueda = dict_ligas.get(nombre_liga, nombre_liga)
-    
     partidos_filtrados = Game.objects.filter(league__icontains=termino_busqueda)
     context = {
         'liga_seleccionada' : nombre_liga.upper(),
         'categoria' : categoria,
         'partidos' : partidos_filtrados
     }
-    
     return render(request, 'apuestas/partidos_liga.html' , context=context)
+
 
 @login_required
 def ingresar(request):
@@ -110,7 +113,7 @@ def realizar_apuesta(request):
         )
         
         messages.success(request, f"¡Apuesta de {quantity}€ realizada con éxito!")
-        return redirect('apuestas:games_list')
+        return redirect('apuestas:bets_list')
     
     return redirect('apuestas:home')
         
