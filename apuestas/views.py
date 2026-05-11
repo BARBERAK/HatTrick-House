@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import login_required
 from .models import Game, Bet, UserProfile
@@ -117,6 +117,20 @@ def realizar_apuesta(request):
     
     return redirect('apuestas:home')
         
+@login_required
+def borrar_apuesta(request, bet_id):
+    if request.method == "POST":
+        # lanza un 404 si la puesta a eliminar no es de ese ususario
+        bet = get_object_or_404(Bet, id=bet_id, user=request.user)
+        
+        # le devolvemos el dinero a l'usuario
+        profile = request.user.userprofile
+        profile.money += bet.amount
+        profile.save()
+        
+        bet.delete()
+        
+    return redirect('apuestas:bets_list')
         
             
             

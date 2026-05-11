@@ -11,5 +11,5 @@ urlpatterns = [
     path('partidos/<str:categoria>/<str:nombre_liga>/', views.partidos_liga, name="partidos_liga"),
     path('ingresar/', views.ingresar, name='ingresar'),
     path('registrar/' , views.register, name="registrar"),
-    path('realizar-apuesta/' , views.realizar_apuesta, name="realizar_apuesta")
+    path('eliminar-apuesta/<int:bet_id>/', views.borrar_apuesta, name='eliminar_apuesta'),
 ]

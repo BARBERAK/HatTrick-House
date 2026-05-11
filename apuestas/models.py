@@ -60,5 +60,9 @@ class Bet(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     
+    @property
+    def potential_profit(self):
+        return self.amount * self.price
+    
     def __str__(self):
         return f"Apuesta de {self.user.username} en {self.game}"
