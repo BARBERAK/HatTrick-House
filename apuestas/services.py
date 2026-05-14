@@ -2,7 +2,7 @@ import requests
 import json
 import pytz
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from .models import Game
 
 
@@ -49,64 +49,70 @@ def fetch_data_debug(url_league):
     return data
 
 def convert_timezone(game_date):
-    utc_time = datetime.strptime(game_date[11:-1], "%H:%M:%S")
-    utc = pytz.utc
-    spain = pytz.timezone("Europe/Madrid")
+   clean_date = game_date("Z", "+00:00")
+  
+   utc_time = datetime.fromisoformat(clean_date)   
+   utc = pytz.utc
+   spain = pytz.timezone("Europe/Madrid")
 
-    utc_time = utc.localize(utc_time)
-    spain_time = utc_time.astimezone(spain)
 
-    return spain_time.time()
+   utc_time = utc.localize(utc_time)
+   spain_time = utc_time.astimezone(spain) 
+
+
+   return spain_time.time()
+
 
 
 
 def clean_data_league(data):
-    games_list = []
-    
-    for simple_data in data:
-        game_id = simple_data["id"]
-        
-        #guardaremos tambien datos de la liga que es y el deporte.
-        sport = simple_data["sport_key"][:6] #soccer
-        league = simple_data["sport_title"] #La Liga - Spain
-        
-        #recibimos de la API un formato diferente al de europa/madrid. Es por eso que lo adaptamos a nuestro horario.
-        commence_time = simple_data["commence_time"]
-        spain_time = convert_timezone(commence_time)
-        
-        #en game_date guardamos tanto la fecha como la hora. Lo separamos con el caracter &
-        game_date = commence_time[:10] + " " + str(spain_time)
-        home_team = simple_data["home_team"]
-        away_team = simple_data["away_team"]
-        info_bookmakers = simple_data["bookmakers"][0]["markets"][0]
-        away_price = None
-        home_price = None
-        draw_price = None
-        
-        for outcome in info_bookmakers["outcomes"]:
-            if outcome["name"] == home_team:
-                home_price = outcome["price"]
-            elif outcome["name"] == away_team:
-                away_price = outcome["price"]
-            elif outcome["name"] == "Draw":
-                draw_price = outcome["price"]
-    
-        game_dict = {
-            "game_id" : game_id,
-            "sport_key" : sport,
-            "league" : league,
-            "game_date" : game_date,
-            "home_team" : home_team,
-            "away_team" : away_team,
-            "away_price" : away_price,
-            "home_price" : home_price,
-            "draw_price" : draw_price
-        }
-        games_list.append(game_dict)
-    
-    return games_list
-    
+   games_list = []
+  
+   for simple_data in data:
+       game_id = simple_data["id"]
+      
+       #guardaremos tambien datos de la liga que es y el deporte.
+       sport = simple_data["sport_key"][:6] #soccer
+       league = simple_data["sport_title"] #La Liga - Spain
+      
+       #recibimos de la API un formato diferente al de europa/madrid. Es por eso que lo adaptamos a nuestro horario.
+       commence_time = simple_data["commence_time"]
+       spain_datetime = convert_timezone(commence_time)
 
+
+       game_date = spain_datetime.strftime("%Y-%m-%d %H:%M:%S")       
+      
+       #en game_date guardamos tanto la fecha como la hora. Lo separamos con el caracter &
+       game_date = commence_time[:10] + " "
+       home_team = simple_data["home_team"]
+       away_team = simple_data["away_team"]
+       info_bookmakers = simple_data["bookmakers"][0]["markets"][0]
+       away_price = None
+       home_price = None
+       draw_price = None
+      
+       for outcome in info_bookmakers["outcomes"]:
+           if outcome["name"] == home_team:
+               home_price = outcome["price"]
+           elif outcome["name"] == away_team:
+               away_price = outcome["price"]
+           elif outcome["name"] == "Draw":
+               draw_price = outcome["price"]
+  
+       game_dict = {
+           "game_id" : game_id,
+           "sport_key" : sport,
+           "league" : league,
+           "game_date" : game_date,
+           "home_team" : home_team,
+           "away_team" : away_team,
+           "away_price" : away_price,
+           "home_price" : home_price,
+           "draw_price" : draw_price
+       }
+       games_list.append(game_dict)
+  
+   return games_list
 
 def save_to_db(games_list):
     for game in games_list:
