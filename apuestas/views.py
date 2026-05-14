@@ -131,6 +131,36 @@ def borrar_apuesta(request, bet_id):
         bet.delete()
         
     return redirect('apuestas:bets_list')
+
+
+@login_required
+def editar_apuesta(request, bet_id):
+    if request.method == "POST":
+        new_quantity = Decimal(request.POST.get('cantidad_input'))
+        bet = get_object_or_404(Bet, id=bet_id, user=request.user)
+        
+        if new_quantity <= 0:
+            messages.error(request, "La cantidad a apostar debe ser mayor que cero.")
+            return redirect('apuestas:bets_list')
+        
+        profile = request.user.userprofile
+        if new_quantity > bet.amount and profile.money >= (new_quantity - bet.amount):
+            diff = new_quantity - bet.amount
+            bet.amount = new_quantity
+            profile.money -= diff
+            
+        elif new_quantity <= bet.amount:
+            diff = bet.amount - new_quantity
+            profile.money += diff
+            bet.amount = new_quantity
+            
+        bet.save()
+        profile.save()
+            
+    return redirect('apuestas:bets_list')
+        
+        
+    
         
             
             
