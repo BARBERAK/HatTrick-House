@@ -10,7 +10,7 @@ from decimal import Decimal
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.db.models import Q
-
+from django.urls import reverse
 
 def home(request):
     """Home page view."""
@@ -163,25 +163,40 @@ def editar_apuesta(request, bet_id):
 def buscar_partidos_ajax(request):
     query = request.GET.get("q", "").strip()
 
-    if len(query) < 2:
+    if len(query) == 0:
         return JsonResponse({"results": []})
 
     partidos = Game.objects.filter(
         Q(home_team__icontains=query) | Q(away_team__icontains=query)
-    ).order_by("game_date")[:10]
+    ).order_by("game_date")[:30]
+
+    dict_ligas_url = {
+        "La Liga - Spain": ("soccer", "la liga"),
+        "EPL": ("soccer", "premier league"),
+        "Champions League": ("soccer", "champions league"),
+        "NBA": ("basketball", "NBA"),
+        "Tenis": ("tenis", "tenis"),
+    }
 
     results = []
     for partido in partidos:
+        categoria, nombre_liga = dict_ligas_url.get(
+            partido.league,
+            (partido.sport_key, partido.league.lower())
+        )
+
+        url = reverse("apuestas:partidos_liga", args=[categoria, nombre_liga])
+
         results.append({
             "game_id": partido.game_id,
             "home_team": partido.home_team,
             "away_team": partido.away_team,
             "league": partido.league,
             "game_date": partido.game_date.strftime("%d/%m/%Y %H:%M"),
+            "url": url,
         })
 
     return JsonResponse({"results": results})
-        
         
     
         

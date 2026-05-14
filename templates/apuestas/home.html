@@ -1,43 +1,112 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}Inicio - HatTrick House{% endblock %} 
-{% block content %} <div class="hero-section">
+{% block title %}Inicio - HatTrick House{% endblock %}
 
-<!--BARRA DE BÚSQUEDA-->
-<div class ="search-bar">
-    <form action="#" method="get" class="search-form">
-        <input type="text" name="q" placeholder="Buscar equipos, partidos, ..." class="search-input">
-        <button type="submit" class="search-button">🔎</button>
-    </form>
-</div>
+{% block content %}
+<div class="hero-section">
 
-<!--BOTONES-->
-<div class="sports-categories">
-    <div class="div-grid">
-        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'la liga'%}" class="league-card">
-            <img src="{% static 'apuestas/img/laliga.png' %}" alt="La Liga">
-        </a>
-        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'premier league' %}" class="league-card">
-            <img src="{% static 'apuestas/img/premier_league.png' %}" alt="Premier League">
-        </a>
-        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'champions league' %}" class="league-card">
-            <img src="{% static 'apuestas/img/champions_league.png' %}" alt="Champions League">
-        </a>
-        <a href="{% url 'apuestas:partidos_liga' 'soccer' 'serie a' %}" class="league-card">
-            <img src="{% static 'apuestas/img/serie_a.png' %}" alt="Serie A">
-        </a>
-        
-        <a href="{% url 'apuestas:partidos_liga' 'basketball' 'NBA' %}" class="league-card">
-            <img src="{% static 'apuestas/img/nba.png' %}" alt="NBA">
-        </a>
-        
-        <a href="{% url 'apuestas:partidos_liga' 'tenis' 'tenis'%}" class="league-card">
-            <img src="{% static 'apuestas/img/tenis.png' %}" alt="Tenis">
-        </a>
+    <div class="search-wrapper">
+        <div class="search-bar">
+            <form action="#" method="get" class="search-form" onsubmit="return false;">
+                <input
+                    type="text"
+                    id="search-input"
+                    name="q"
+                    placeholder="Buscar equipos o partidos..."
+                    class="search-input"
+                    autocomplete="off"
+                >
+                <button type="button" class="search-button">🔎</button>
+            </form>
+        </div>
+
+        <div id="search-results" class="search-results"></div>
+    </div>
+
+    <div class="sports-categories">
+        <div class="div-grid">
+            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'la liga' %}" class="league-card">
+                <img src="{% static 'apuestas/img/laliga.png' %}" alt="La Liga">
+            </a>
+            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'premier league' %}" class="league-card">
+                <img src="{% static 'apuestas/img/premier_league.png' %}" alt="Premier League">
+            </a>
+            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'champions league' %}" class="league-card">
+                <img src="{% static 'apuestas/img/champions_league.png' %}" alt="Champions League">
+            </a>
+            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'serie a' %}" class="league-card">
+                <img src="{% static 'apuestas/img/serie_a.png' %}" alt="Serie A">
+            </a>
+            <a href="{% url 'apuestas:partidos_liga' 'basketball' 'NBA' %}" class="league-card">
+                <img src="{% static 'apuestas/img/nba.png' %}" alt="NBA">
+            </a>
+            <a href="{% url 'apuestas:partidos_liga' 'tenis' 'tenis' %}" class="league-card">
+                <img src="{% static 'apuestas/img/tenis.png' %}" alt="Tenis">
+            </a>
+        </div>
     </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("search-input");
+    const resultsBox = document.getElementById("search-results");
+    let timeout = null;
 
+    input.addEventListener("input", function () {
+        const query = input.value.trim();
 
+        clearTimeout(timeout);
 
+        if (query.length === 0) {
+            resultsBox.innerHTML = "";
+            resultsBox.style.display = "none";
+            return;
+        }
+
+        timeout = setTimeout(() => {
+            fetch(`/buscar-partidos-ajax/?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultsBox.innerHTML = "";
+
+                    if (data.results.length === 0) {
+                        resultsBox.innerHTML = `
+                            <div class="search-result-item">
+                                <div class="search-result-title">No se encontraron partidos</div>
+                            </div>
+                        `;
+                        resultsBox.style.display = "block";
+                        return;
+                    }
+
+                    data.results.forEach(partido => {
+                        const item = document.createElement("a");
+                        item.classList.add("search-result-item");
+                        item.href = partido.url;
+
+                        item.innerHTML = `
+                            <div class="search-result-title">${partido.home_team} vs ${partido.away_team}</div>
+                            <div class="search-result-meta">${partido.league} · ${partido.game_date}</div>
+                        `;
+
+                        resultsBox.appendChild(item);
+                    });
+
+                    resultsBox.style.display = "block";
+                })
+                .catch(error => {
+                    console.error("Error en la búsqueda AJAX:", error);
+                });
+        }, 250);
+    });
+
+    document.addEventListener("click", function (e) {
+        const wrapper = document.querySelector(".search-wrapper");
+        if (wrapper && !wrapper.contains(e.target)) {
+            resultsBox.style.display = "none";
+        }
+    });
+});
+</script>
 {% endblock %}
