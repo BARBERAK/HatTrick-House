@@ -34,3 +34,5 @@ static/apuestas/img/
 
 #no subir claves ni cosas importantes
 .env
+venv312/
+.DS_Store
