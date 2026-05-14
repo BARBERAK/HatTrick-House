@@ -5,40 +5,39 @@
 {% block content %}
 
 <div class="partidos-completos">
-    
+
     {% if categoria == 'soccer' %}
-        <h2>{{liga_seleccionada}} ⚽️</h2>
-
+        <h2>{{ liga_seleccionada }} Futbol</h2>
     {% elif categoria == 'basketball' %}
-        <h2>{{liga_seleccionada}} 🏀</h2>
-
+        <h2>{{ liga_seleccionada }} Baloncesto</h2>
     {% elif categoria == 'tenis' %}
-        <h2>{{liga_seleccionada}} 🎾</h2>
+        <h2>{{ liga_seleccionada }} Tenis</h2>
     {% endif %}
-        
+
     {% for partido in partidos %}
-    <div class="datos-completos">
+    <div class="datos-completos" id="game-{{ partido.game_id }}">
 
         <div class="partido-concreto">
-            <span class="dia-partido"><strong>{{ partido.game_date|date:"D d M - H:i" }}</strong></span>
+            <span class="dia-partido"><strong>{{ partido.game_date|date:'D d M - H:i' }}</strong></span>
             <span class="equipo-local">{{ partido.home_team }}</span>
             <span class="equipo-visitante">{{ partido.away_team }}</span>
         </div>
 
         <div class="cuota-partido">
             <div class="boton-cuota js-apuesta"
-                data-game-id="{{partido.game_id}}"
-                data-match="{{partido.home_team}} vs {{partido.away_team}}"
-                data-price="{{partido.home_price}}"
+                data-game-id="{{ partido.game_id }}"
+                data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
+                data-price="{{ partido.home_price }}"
                 data-selection="1">
                 <span class="etiqueta">1</span>
-                <span class="valor">{{partido.home_price}}</span>
+                <span class="valor">{{ partido.home_price }}</span>
             </div>
+
             {% if partido.draw_price %}
                 <div class="boton-cuota js-apuesta"
-                    data-game-id="{{partido.game_id}}"
-                    data-match="{{partido.home_team}} vs {{partido.away_team}}"
-                    data-price="{{partido.draw_price}}"
+                    data-game-id="{{ partido.game_id }}"
+                    data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
+                    data-price="{{ partido.draw_price }}"
                     data-selection="X">
                     <span class="etiqueta">X</span>
                     <span class="valor">{{ partido.draw_price }}</span>
@@ -49,13 +48,14 @@
                     <span class="valor">-</span>
                 </div>
             {% endif %}
+
             <div class="boton-cuota js-apuesta"
-                data-game-id="{{partido.game_id}}"
-                data-match="{{partido.home_team}} vs {{partido.away_team}}"
-                data-price="{{partido.away_price}}"
+                data-game-id="{{ partido.game_id }}"
+                data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
+                data-price="{{ partido.away_price }}"
                 data-selection="2">
                 <span class="etiqueta">2</span>
-                <span class="valor">{{partido.away_price}}</span>
+                <span class="valor">{{ partido.away_price }}</span>
             </div>
         </div>
 
@@ -63,60 +63,94 @@
     {% endfor %}
 </div>
 
-{% include 'apuestas/bet_slip.html'%}
+{% include 'apuestas/bet_slip.html' %}
+
 {% endblock %}
 
 {% block scripts %}
-    {% if user.is_authenticated%}
-        <script>
-            //cuando el usuario hace clic en la cuota
-            $(document).ready(function(){
-                $('.js-apuesta').click(function(){
-                    let gameId = $(this).data('game-id');
-                    let match = $(this).data('match');
-                    let price = parseFloat($(this).data('price'));
-                    let selection = $(this).data('selection');
+    {% if user.is_authenticated %}
+    <script>
+        $(document).ready(function () {
+            $('.js-apuesta').click(function () {
+                let gameId = $(this).data('game-id');
+                let match = $(this).data('match');
+                let price = parseFloat($(this).data('price'));
+                let selection = $(this).data('selection');
 
-                    let equipoSeleccionado = "";
-                    let equipos = match.split(" vs "); 
+                let equipoSeleccionado = "";
+                let equipos = match.split(" vs ");
 
-                    if (selection == "1") {
-                        equipoSeleccionado = equipos[0];
-                    } else if (selection == "X") {
-                        equipoSeleccionado = "Empate";
-                    } else if (selection == "2") {
-                        equipoSeleccionado = equipos[1];
-                    }
+                if (selection == "1") {
+                    equipoSeleccionado = equipos[0];
+                } else if (selection == "X") {
+                    equipoSeleccionado = "Empate";
+                } else if (selection == "2") {
+                    equipoSeleccionado = equipos[1];
+                }
 
-                    //actualizamos interfaz
-                    $('#boleto-partido').text(match);
-                    $('#boleto-eleccion').text(equipoSeleccionado);
-                    $('#boleto-cuota').text(price.toFixed(2));
+                $('#boleto-partido').text(match);
+                $('#boleto-eleccion').text(equipoSeleccionado);
+                $('#boleto-cuota').text(price.toFixed(2));
 
-                    //rellenamos los input hidden para enviarlos luego.
-                    $('#hidden-game-id').val(gameId);
-                    $('#hidden-seleccion').val(selection);
-                    $('#hidden-cuota').val(price);
+                $('#hidden-game-id').val(gameId);
+                $('#hidden-seleccion').val(selection);
+                $('#hidden-cuota').val(price);
 
-                    $('#cajon-boleto').slideDown();
-                    //reiniciamos valores por si habia algo escrito
-                    $('#input-dinero').val('');
-                    $('#boleto-ganancia').text('0.00 €');
-                });
-                //cuando el usuario cambia la cantidad que apostará le muestra la nueva ganancia
-                $('#input-dinero').on('input' , function(){
-                    let quantity = parseFloat($(this).val());
-                    let price = parseFloat($('#hidden-cuota').val());
+                $('#cajon-boleto').slideDown();
+                $('#input-dinero').val('');
+                $('#boleto-ganancia').text('0.00 EUR');
+            });
 
-                    if(quantity > 0 && price > 0){
-                        let profit = quantity * price;
-                        $('#boleto-ganancia').text(profit.toFixed(2) + ' €');
-                    }else{
-                        $('#boleto-ganancia').text('0.00 €');
-                    }
-                });
-            })
-        </script>
+            $('#input-dinero').on('input', function () {
+                let quantity = parseFloat($(this).val());
+                let price = parseFloat($('#hidden-cuota').val());
+
+                if (quantity > 0 && price > 0) {
+                    let profit = quantity * price;
+                    $('#boleto-ganancia').text(profit.toFixed(2) + ' EUR');
+                } else {
+                    $('#boleto-ganancia').text('0.00 EUR');
+                }
+            });
+        });
+    </script>
     {% endif %}
-{% endblock %}
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const hash = window.location.hash;
+
+            if (!hash || !hash.startsWith("#game-")) {
+                return;
+            }
+
+            const targetId = decodeURIComponent(hash.substring(1));
+            const objetivo = document.getElementById(targetId);
+
+            console.log("Hash recibido:", hash);
+            console.log("ID buscado:", targetId);
+            console.log("Elemento encontrado:", objetivo);
+
+            if (!objetivo) {
+                return;
+            }
+
+            setTimeout(() => {
+                objetivo.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+
+                objetivo.classList.add("partido-destacado");
+
+                objetivo.style.setProperty("border", "4px solid #ff7a00", "important");
+                objetivo.style.setProperty("background-color", "#fff3cd", "important");
+                objetivo.style.setProperty("box-shadow", "0 0 0 10px rgba(255, 122, 0, 0.28)", "important");
+
+                setTimeout(() => {
+                    objetivo.classList.add("partido-destacado-flash");
+                }, 50);
+            }, 300);
+        });
+    </script>
+{% endblock %}

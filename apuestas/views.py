@@ -36,21 +36,24 @@ def create_update(request):
     
 def partidos_liga(request, nombre_liga, categoria):
     dict_ligas = {
-        "La Liga - Spain" : "La Liga",
-        "premier league" : "EPL",
-        "champions_league" : "Champions League",
-        "NBA" : "NBA",
+        "La Liga - Spain": "La Liga",
+        "premier league": "EPL",
+        "champions_league": "Champions League",
+        "NBA": "NBA",
     }
+
     termino_busqueda = dict_ligas.get(nombre_liga, nombre_liga)
     partidos_filtrados = Game.objects.filter(league__icontains=termino_busqueda)
+
+    highlight_id = request.GET.get("highlight", "")
+
     context = {
-        'liga_seleccionada' : nombre_liga.upper(),
-        'categoria' : categoria,
-        'partidos' : partidos_filtrados
+        'liga_seleccionada': nombre_liga.upper(),
+        'categoria': categoria,
+        'partidos': partidos_filtrados,
+        'highlight_id': str(highlight_id),
     }
-    return render(request, 'apuestas/partidos_liga.html' , context=context)
-
-
+    return render(request, 'apuestas/partidos_liga.html', context=context)
 @login_required
 def ingresar(request):
     if request.method == "POST":
@@ -185,7 +188,8 @@ def buscar_partidos_ajax(request):
             (partido.sport_key, partido.league.lower())
         )
 
-        url = reverse("apuestas:partidos_liga", args=[categoria, nombre_liga])
+        url_base = reverse("apuestas:partidos_liga", args=[categoria, nombre_liga])
+        url = f"{url_base}?highlight={partido.game_id}#game-{partido.game_id}"
 
         results.append({
             "game_id": partido.game_id,
@@ -197,9 +201,3 @@ def buscar_partidos_ajax(request):
         })
 
     return JsonResponse({"results": results})
-        
-    
-        
-            
-            
-            
