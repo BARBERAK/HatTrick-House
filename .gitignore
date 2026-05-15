@@ -9,7 +9,7 @@
 .DS_Store
 
 # Django
-db.sqlite3
+# db.sqlite3
 
 #api key
 THE ODDS API.md
