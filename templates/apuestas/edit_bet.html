@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Apuesta - HatTrick House{% endblock %}
+
+{% block content %}
+<div class="deposit-container" style="max-width: 500px; margin: 40px auto; text-align: center;">
+    <h2>Editar Apuesta</h2>
+    
+    <div style="margin-bottom: 20px; background: #f3f4f6; padding: 15px; border-radius: 8px;">
+        <h3>{{ bet.game.home_team }} vs {{ bet.game.away_team }}</h3>
+        <p>Elección: <strong>{{ bet.selection }}</strong></p>
+        <p>Cuota: <strong>{{ bet.price }}</strong></p>
+    </div>
+
+    <form action="{% url 'apuestas:editar_apuesta' bet.id %}" method="post" class="form-deposit">
+        {% csrf_token %}
+        <label for="cantidad_input">Nueva cantidad a apostar (€):</label>
+        <input type="number" id="cantidad_input" step="0.50" min="0.50" name="cantidad_input" value="{{ bet.amount }}" class="amount-to-enter" required>
+        <button type="submit" class="deposit-button">Guardar Cambios</button>
+        <a href="{% url 'apuestas:bets_list' %}" style="display: block; margin-top: 15px; color: #555;">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

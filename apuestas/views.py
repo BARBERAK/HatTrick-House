@@ -140,9 +140,9 @@ def borrar_apuesta(request, bet_id):
 
 @login_required
 def editar_apuesta(request, bet_id):
+    bet = get_object_or_404(Bet, id=bet_id, user=request.user)
     if request.method == "POST":
         new_quantity = Decimal(request.POST.get('cantidad_input'))
-        bet = get_object_or_404(Bet, id=bet_id, user=request.user)
         
         if new_quantity <= 0:
             messages.error(request, "La cantidad a apostar debe ser mayor que cero.")
@@ -158,11 +158,16 @@ def editar_apuesta(request, bet_id):
             diff = bet.amount - new_quantity
             profile.money += diff
             bet.amount = new_quantity
+        else:
+            messages.error(request, "ERROR. No has podido apostar.")
+            return redirect('apuestas:bets_list')
             
         bet.save()
         profile.save()
+        return redirect('apuestas:bets_list')
             
-    return redirect('apuestas:bets_list')
+    return render(request, 'apuestas/edit_bet.html', {'bet': bet})
+
 def buscar_partidos_ajax(request):
     query = request.GET.get("q", "").strip()
 
