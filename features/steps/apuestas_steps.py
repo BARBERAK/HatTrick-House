@@ -47,13 +47,10 @@ def step_create_bet(context, amount, game_id):
 
 @when('El usuario visita la página del partido "{game_id}"')
 def step_visit_game(context, game_id):
-    # Vamos a la ruta donde tienes el listado de partidos
     context.browser.visit(context.base_url + '/partidos/soccer/LaLiga/') 
 
 @when('Selecciona la opción "{selection}" con cuota "{cuota}"')
 def step_select_odd(context, selection, cuota):
-    # HACK: Como el robot "django" no ejecuta JavaScript, rellenamos los 
-    # inputs hidden directamente basándonos en tu bet_slip.html
     context.browser.fill('game_id', 'game1')
     context.browser.fill('seleccion', selection)
     context.browser.fill('cuota', cuota)
@@ -65,7 +62,6 @@ def step_fill_amount(context, cantidad):
 @when('Hace clic en "{texto_boton}"')
 @when('El usuario hace clic en "{texto_boton}"')
 def step_click_button(context, texto_boton):
-    # Intenta buscar el botón primero por "value" (<input type="submit">) y si no, por texto (<button>)
     if context.browser.is_element_present_by_value(texto_boton):
         context.browser.find_by_value(texto_boton).first.click()
     else:
@@ -77,7 +73,6 @@ def step_visit_my_bets(context):
 
 @when('El usuario edita la apuesta al nuevo valor de "{nueva_cantidad}" euros')
 def step_edit_bet(context, nueva_cantidad):
-    # Viajamos directamente a la URL de edición para evitar que el navegador se pierda buscando enlaces
     apuesta = Bet.objects.first()
     context.browser.visit(context.base_url + f'/editar-apuesta/{apuesta.id}/')
     
@@ -89,7 +84,6 @@ def step_edit_bet(context, nueva_cantidad):
 
 @then('Se muestra un mensaje de éxito')
 def step_check_success_message(context):
-    # Buscamos palabras clave en todo el HTML, es infalible sin importar la clase CSS
     html_de_la_pagina = context.browser.html.lower()
     assert "éxito" in html_de_la_pagina or "correctamente" in html_de_la_pagina, "No se encontró el texto de éxito."
 
@@ -115,6 +109,5 @@ def step_check_original_bet(context, cantidad):
 @then('El saldo del usuario es "{saldo_esperado}"')
 @then('El saldo del usuario vuelve a ser "{saldo_esperado}"')
 def step_check_balance(context, saldo_esperado):
-    # Recarga el perfil desde la BD para ver si las matemáticas fueron correctas
     user = User.objects.get(username="testuser")
     assert user.userprofile.money == Decimal(saldo_esperado)
