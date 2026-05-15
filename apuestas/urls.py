@@ -12,7 +12,6 @@ urlpatterns = [
     path('registrar/', views.register, name="registrar"),
     path('eliminar-apuesta/<int:bet_id>/', views.borrar_apuesta, name='eliminar_apuesta'),
     path('editar-apuesta/<int:bet_id>/', views.editar_apuesta, name='editar_apuesta'),
-    path('realizar-apuesta/' , views.realizar_apuesta, name="realizar_apuesta"),
     path('buscar-partidos-ajax/', views.buscar_partidos_ajax, name='buscar_partidos_ajax'),
     path('realizar-apuesta/', views.realizar_apuesta, name="realizar_apuesta"),
     path('withdraw/', views.withdraw, name="withdraw"),
