@@ -60,6 +60,7 @@ def ingresar(request):
             user_profile = request.user.userprofile
             user_profile.money += quantity
             user_profile.save()
+            messages.success(request, f"Has ingresado {quantity}€ correctamente!")
             return redirect('apuestas:home')
             
     return render(request, 'apuestas/deposit.html')
@@ -70,18 +71,18 @@ def withdraw(request):
         quantity = Decimal(request.POST.get('quantity'))
 
         if quantity <= 0:
-            messages.error(request, "The amount must be greater than zero.")
+            messages.error(request, "El saldo debe ser más grande que 0.")
             return render(request, 'apuestas/withdraw.html')
 
         user_profile = request.user.userprofile
 
         if quantity > user_profile.money:
-            messages.error(request, "You do not have enough balance to withdraw that amount.")
+            messages.error(request, "No tienes suficiente saldo para retirar.")
             return render(request, 'apuestas/withdraw.html')
 
         user_profile.money -= quantity
         user_profile.save()
-        messages.success(request, f"You have withdrawn {quantity}€ successfully.")
+        messages.success(request, f"Has retirado {quantity}€ correctamente.")
         return redirect('apuestas:home')
 
     return render(request, 'apuestas/withdraw.html')
