@@ -10,7 +10,7 @@ from decimal import Decimal
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.db.models import Q
-
+from django.urls import reverse
 
 def home(request):
     """Home page view."""
@@ -36,21 +36,24 @@ def create_update(request):
     
 def partidos_liga(request, nombre_liga, categoria):
     dict_ligas = {
-        "La Liga - Spain" : "La Liga",
-        "premier league" : "EPL",
-        "champions_league" : "Champions League",
-        "NBA" : "NBA",
+        "La Liga - Spain": "La Liga",
+        "premier league": "EPL",
+        "champions_league": "Champions League",
+        "NBA": "NBA",
     }
+
     termino_busqueda = dict_ligas.get(nombre_liga, nombre_liga)
     partidos_filtrados = Game.objects.filter(league__icontains=termino_busqueda)
+
+    highlight_id = request.GET.get("highlight", "")
+
     context = {
-        'liga_seleccionada' : nombre_liga.upper(),
-        'categoria' : categoria,
-        'partidos' : partidos_filtrados
+        'liga_seleccionada': nombre_liga.upper(),
+        'categoria': categoria,
+        'partidos': partidos_filtrados,
+        'highlight_id': str(highlight_id),
     }
-    return render(request, 'apuestas/partidos_liga.html' , context=context)
-
-
+    return render(request, 'apuestas/partidos_liga.html', context=context)
 @login_required
 def ingresar(request):
     if request.method == "POST":
@@ -191,28 +194,38 @@ def editar_apuesta(request, bet_id):
 def buscar_partidos_ajax(request):
     query = request.GET.get("q", "").strip()
 
-    if len(query) < 2:
+    if len(query) == 0:
         return JsonResponse({"results": []})
 
     partidos = Game.objects.filter(
         Q(home_team__icontains=query) | Q(away_team__icontains=query)
-    ).order_by("game_date")[:10]
+    ).order_by("game_date")[:30]
+
+    dict_ligas_url = {
+        "La Liga - Spain": ("soccer", "la liga"),
+        "EPL": ("soccer", "premier league"),
+        "Champions League": ("soccer", "champions league"),
+        "NBA": ("basketball", "NBA"),
+        "Tenis": ("tenis", "tenis"),
+    }
 
     results = []
     for partido in partidos:
+        categoria, nombre_liga = dict_ligas_url.get(
+            partido.league,
+            (partido.sport_key, partido.league.lower())
+        )
+
+        url_base = reverse("apuestas:partidos_liga", args=[categoria, nombre_liga])
+        url = f"{url_base}?highlight={partido.game_id}#game-{partido.game_id}"
+
         results.append({
             "game_id": partido.game_id,
             "home_team": partido.home_team,
             "away_team": partido.away_team,
             "league": partido.league,
             "game_date": partido.game_date.strftime("%d/%m/%Y %H:%M"),
+            "url": url,
         })
 
     return JsonResponse({"results": results})
-        
-        
-    
-        
-            
-            
-            
