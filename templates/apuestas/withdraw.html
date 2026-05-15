@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="deposit-container">
+    <h1>Withdraw money</h1>
+
+    <form method="post" class="deposit-form">
+        {% csrf_token %}
+        <label for="quantity">Amount</label>
+        <input type="number" name="quantity" id="quantity" step="0.01" min="0.01" required>
+        <button type="submit">Withdraw</button>
+    </form>
+</div>
+{% endblock %}

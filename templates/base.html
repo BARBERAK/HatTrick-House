@@ -18,12 +18,13 @@
             <a href="{% url 'apuestas:bets_list' %}" class="nav-sports">Mis Apuestas</a>
         </div>
         <div class="nav-right">
-            {% if user.is_authenticated%}
-                <span class="nav-saldo">Saldo {{user.userprofile.money}} €</span>
+            {% if user.is_authenticated %}
+                <span class="nav-saldo">Saldo {{ user.userprofile.money }} €</span>
                 <a href="{% url 'apuestas:ingresar' %}" class="nav-deposit">Ingresar</a>
+                <a href="{% url 'apuestas:withdraw' %}" class="nav-deposit">Retirar</a>
                 <form action="{% url 'logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" class="nav-logout">Cerrar Sessión</button>
+                    <button type="submit" class="nav-logout">Cerrar Sesión</button>
                 </form>
             {% else %}
                 <a href="{% url 'apuestas:registrar' %}" class="nav-register">Registrarse</a>
@@ -31,6 +32,22 @@
             {% endif %}
         </div>
     </nav>
+
+    {% if messages %}
+    <div style="max-width: 900px; margin: 20px auto; padding: 0 20px;">
+        {% for message in messages %}
+            {% if 'success' in message.tags %}
+                <div style="background-color: #d1e7dd; color: #0f5132; border: 1px solid #a3cfbb; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; text-align: center;">
+            {% elif 'error' in message.tags %}
+                <div style="background-color: #f8d7da; color: #842029; border: 1px solid #f1aeb5; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; text-align: center;">
+            {% else %}
+                <div style="background-color: #e2e3e5; color: #41464b; border: 1px solid #c6c8ca; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; text-align: center;">
+            {% endif %}
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
     <div class="container">
         {% block content %}{% endblock %}
