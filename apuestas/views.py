@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from decimal import Decimal
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.db.models import Q
 
 
 def home(request):
@@ -162,6 +164,28 @@ def editar_apuesta(request, bet_id):
         return redirect('apuestas:bets_list')
             
     return render(request, 'apuestas/edit_bet.html', {'bet': bet})
+
+def buscar_partidos_ajax(request):
+    query = request.GET.get("q", "").strip()
+
+    if len(query) < 2:
+        return JsonResponse({"results": []})
+
+    partidos = Game.objects.filter(
+        Q(home_team__icontains=query) | Q(away_team__icontains=query)
+    ).order_by("game_date")[:10]
+
+    results = []
+    for partido in partidos:
+        results.append({
+            "game_id": partido.game_id,
+            "home_team": partido.home_team,
+            "away_team": partido.away_team,
+            "league": partido.league,
+            "game_date": partido.game_date.strftime("%d/%m/%Y %H:%M"),
+        })
+
+    return JsonResponse({"results": results})
         
         
     
