@@ -24,10 +24,9 @@
                         {% csrf_token %}
                         <input type="submit" class="button-delete-bet" value="ELIMINAR APUESTA" onclick="return confirm('¿Estás seguro de que quieres cancelar esta apuesta y recuperar tu dinero?');">
                     </form>
-                    <form action="{% url 'apuestas:editar_apuesta' bet.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" class="button-edit-bet" value="EDITAR APUESTA">
-                    </form>
+                    
+                    {% comment %} <input type="submit" class="button-edit-bet" value="EDITAR APUESTA"> {% endcomment %}
+                    <a href="{% url 'apuestas:editar_apuesta' bet.id %}" class="button-edit-bet" style="display: inline-block; text-decoration: none; box-sizing: border-box;">EDITAR APUESTA</a>
                 </div>
             </div>
         {% empty %}

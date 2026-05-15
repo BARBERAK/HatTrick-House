@@ -556,10 +556,14 @@ body {
 .button-edit-bet, .button-delete-bet{
   border: 1px solid #777;
   border-radius: 8px;
-  padding: 8px;
+  padding: 8px 10px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   width: 160px;
+  color: black;
+  font-size: 14px;
+  background-color: white;
+  text-align: center;
 }
 
 .button-edit-bet:hover, .button-delete-bet:hover{
