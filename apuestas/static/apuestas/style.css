@@ -600,7 +600,10 @@ body {
   background-color: #d1e7dd;
   color: #0f5132;
   border: 1px solid #a3cfbb;
-   RESULTADOS DEL BUSCADOR AJAX
+}
+   
+/* =========================================
+   BUSCADOR AJAX
    ========================================= */
 
 .search-wrapper {

@@ -7,11 +7,11 @@
 <div class="partidos-completos">
 
     {% if categoria == 'soccer' %}
-        <h2>{{ liga_seleccionada }} Futbol</h2>
+        <h2>{{ liga_seleccionada }} ⚽️</h2>
     {% elif categoria == 'basketball' %}
-        <h2>{{ liga_seleccionada }} Baloncesto</h2>
+        <h2>{{ liga_seleccionada }} 🏀</h2>
     {% elif categoria == 'tenis' %}
-        <h2>{{ liga_seleccionada }} Tenis</h2>
+        <h2>{{ liga_seleccionada }} 🎾</h2>
     {% endif %}
 
     {% for partido in partidos %}
@@ -126,10 +126,6 @@
 
             const targetId = decodeURIComponent(hash.substring(1));
             const objetivo = document.getElementById(targetId);
-
-            console.log("Hash recibido:", hash);
-            console.log("ID buscado:", targetId);
-            console.log("Elemento encontrado:", objetivo);
 
             if (!objetivo) {
                 return;
