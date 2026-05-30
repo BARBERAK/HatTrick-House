@@ -4,47 +4,52 @@
 
 {% block content %}
 
-<div class="detalle-partido" vocab="https://schema.org/" typeof="SportsEvent">
+<div class="detalle-partido-wrapper" vocab="https://schema.org/" typeof="SportsEvent">
 
-    <h1 property="name">{{ game.home_team }} vs {{ game.away_team }}</h1>
+    <h1 class="detalle-titulo" property="name">{{ game.home_team }} vs {{ game.away_team }}</h1>
 
-    <p>Deporte: <span property="sport">{{ game.sport_key }}</span></p>
-    <p>Competición: {{ game.league }}</p>
+    <div class="detalle-card">
+        <p><strong>Deporte:</strong> <span property="sport">{{ game.sport_key }}</span></p>
+        <p><strong>Competición:</strong> {{ game.league }}</p>
+        <p><strong>Fecha:</strong>
+            <time property="startDate" datetime="{{ game.game_date|date:'c' }}">
+                {{ game.game_date|date:'l d M Y - H:i' }}
+            </time>
+        </p>
 
-    <p>Fecha:
-        <time property="startDate" datetime="{{ game.game_date|date:'c' }}">
-            {{ game.game_date|date:'l d M Y - H:i' }}
-        </time>
-    </p>
-
-    <div property="homeTeam" typeof="SportsTeam">
-        <strong>Local:</strong> <span property="name">{{ game.home_team }}</span>
+        <div class="detalle-equipos">
+            <div class="detalle-equipo" property="homeTeam" typeof="SportsTeam">
+                <span class="detalle-equipo-rol">Local</span>
+                <span class="detalle-equipo-nombre" property="name">{{ game.home_team }}</span>
+            </div>
+            <div class="detalle-equipo" property="awayTeam" typeof="SportsTeam">
+                <span class="detalle-equipo-rol">Visitante</span>
+                <span class="detalle-equipo-nombre" property="name">{{ game.away_team }}</span>
+            </div>
+        </div>
     </div>
 
-    <div property="awayTeam" typeof="SportsTeam">
-        <strong>Visitante:</strong> <span property="name">{{ game.away_team }}</span>
-    </div>
+    <h2 class="detalle-subtitulo">Cuotas</h2>
+    <div class="cuota-partido detalle-cuotas">
+        <div class="boton-cuota" property="offers" typeof="Offer">
+            <span class="etiqueta">1</span>
+            <span class="valor" property="price">{{ game.home_price }}</span>
+            <meta property="priceCurrency" content="EUR" />
+        </div>
 
-    <h2>Cuotas</h2>
+        {% if game.draw_price %}
+        <div class="boton-cuota" property="offers" typeof="Offer">
+            <span class="etiqueta">X</span>
+            <span class="valor" property="price">{{ game.draw_price }}</span>
+            <meta property="priceCurrency" content="EUR" />
+        </div>
+        {% endif %}
 
-    <div property="offers" typeof="Offer">
-        <span>1 ({{ game.home_team }}):</span>
-        <span property="price">{{ game.home_price }}</span>
-        <meta property="priceCurrency" content="EUR" />
-    </div>
-
-    {% if game.draw_price %}
-    <div property="offers" typeof="Offer">
-        <span>X (Empate):</span>
-        <span property="price">{{ game.draw_price }}</span>
-        <meta property="priceCurrency" content="EUR" />
-    </div>
-    {% endif %}
-
-    <div property="offers" typeof="Offer">
-        <span>2 ({{ game.away_team }}):</span>
-        <span property="price">{{ game.away_price }}</span>
-        <meta property="priceCurrency" content="EUR" />
+        <div class="boton-cuota" property="offers" typeof="Offer">
+            <span class="etiqueta">2</span>
+            <span class="valor" property="price">{{ game.away_price }}</span>
+            <meta property="priceCurrency" content="EUR" />
+        </div>
     </div>
 
 </div>
