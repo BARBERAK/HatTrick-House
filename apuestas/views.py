@@ -20,10 +20,16 @@ class BetListView(LoginRequiredMixin,ListView):
     model = Bet
     template_name = 'apuestas/bet_list.html'
     context_object_name = 'bets'
-    
+
     # Sobrescribimos esta función para filtrar las apuestas
     def get_queryset(self):
         return Bet.objects.filter(user=self.request.user).order_by('-created_at')
+
+
+class GameDetailView(DetailView):
+    model = Game
+    template_name = 'apuestas/game_detail.html'
+    context_object_name = 'game'
     
 def create_update(request):
     execute_update_api()
