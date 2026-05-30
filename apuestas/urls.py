@@ -8,6 +8,7 @@ urlpatterns = [
     path('apuestas/', views.BetListView.as_view(), name='bets_list'),
     path('update_data/', views.create_update, name="update_data"),
     path('partidos/<str:categoria>/<str:nombre_liga>/', views.partidos_liga, name="partidos_liga"),
+    path('partido/<str:pk>/', views.GameDetailView.as_view(), name="game_detail"),
     path('ingresar/', views.ingresar, name='ingresar'),
     path('registrar/', views.register, name="registrar"),
     path('eliminar-apuesta/<int:bet_id>/', views.borrar_apuesta, name='eliminar_apuesta'),
