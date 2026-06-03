@@ -1,64 +1,261 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}HatTrick House{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'apuestas/style.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}HatTrick House{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'apuestas/style.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f4ff;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: linear-gradient(90deg, #0056d2, #007BFF);
+      box-shadow: 0 3px 12px rgba(0, 90, 255, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .logo:hover {
+      opacity: 0.85;
+    }
+
+    .nav-center {
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-sports {
+      color: #ddeeff;
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-sports:hover {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-saldo {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.15);
+      padding: 6px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-deposit {
+      background-color: #fff;
+      color: #007BFF;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 7px 16px;
+      border-radius: 7px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .nav-deposit:hover {
+      background: #e8f0ff;
+      transform: translateY(-1px);
+    }
+
+    .nav-logout {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.6);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .nav-logout:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: #fff;
+    }
+
+    .nav-register {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 7px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-register:hover {
+      background: rgba(255,255,255,0.28);
+    }
+
+    .nav-login {
+      background: #fff;
+      color: #007BFF;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: 7px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .nav-login:hover {
+      background: #e8f0ff;
+      transform: translateY(-1px);
+    }
+
+    /* ── MENSAJES ── */
+    .messages-wrapper {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .msg {
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .msg-success { background-color: #d1e7dd; color: #0f5132; border: 1px solid #a3cfbb; }
+    .msg-error   { background-color: #f8d7da; color: #842029; border: 1px solid #f1aeb5; }
+    .msg-default { background-color: #e2e3e5; color: #41464b; border: 1px solid #c6c8ca; }
+
+    /* ── CONTENIDO ── */
+    .container {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #888;
+      background-color: #e8edf8;
+      border-top: 1px solid #d0dbf5;
+    }
+  </style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="nav-left">
-            <a href="{% url 'apuestas:home' %}" class="logo">HatTrick House</a>
-        </div>
-        <div class="nav-center">
-            <a href="{% url 'apuestas:bets_list' %}" class="nav-sports">Mis Apuestas</a>
-        </div>
-        <div class="nav-right">
-            {% if user.is_authenticated %}
-                <span class="nav-saldo">Saldo {{ user.userprofile.money }} €</span>
-                <a href="{% url 'apuestas:ingresar' %}" class="nav-deposit">Ingresar</a>
-                <a href="{% url 'apuestas:withdraw' %}" class="nav-deposit">Retirar</a>
-                <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-logout">Cerrar Sesión</button>
-                </form>
-            {% else %}
-                <a href="{% url 'apuestas:registrar' %}" class="nav-register">Registrarse</a>
-                <a href="{% url 'login' %}" class="nav-login">Login</a>
-            {% endif %}
-        </div>
-    </nav>
 
-    {% if messages %}
-    <div style="max-width: 700px; margin: 20px auto; padding: 0 20px;">
-        {% for message in messages %}
-            {% if 'success' in message.tags %}
-                <div style="background-color: #d1e7dd; color: #0f5132; border: 1px solid #a3cfbb; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; text-align: center;">
-            {% elif 'error' in message.tags %}
-                <div style="background-color: #f8d7da; color: #842029; border: 1px solid #f1aeb5; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; text-align: center;">
-            {% else %}
-                <div style="background-color: #e2e3e5; color: #41464b; border: 1px solid #c6c8ca; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-weight: 600; text-align: center;">
-            {% endif %}
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
+  <nav class="navbar">
 
-    <div class="container">
-        {% block content %}{% endblock %}
+    <div class="nav-left">
+      <a href="{% url 'apuestas:home' %}" class="logo">⚽ HatTrick House</a>
     </div>
 
-    <footer>
-        {% comment %} <p>Django Blog - 2026</p> {% endcomment %}
-    </footer>
+    <div class="nav-center">
+      <a href="{% url 'apuestas:bets_list' %}" class="nav-sports">Mis Apuestas</a>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    {% block scripts %}{% endblock %}
+    <div class="nav-right">
+
+      {% if user.is_authenticated %}
+
+        <span class="nav-saldo">💰 {{ user.userprofile.money }} €</span>
+
+        <a href="{% url 'apuestas:ingresar' %}" class="nav-deposit">Ingresar</a>
+
+        <a href="{% url 'apuestas:withdraw' %}" class="nav-deposit">Retirar</a>
+
+        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="nav-logout">Cerrar Sesión</button>
+        </form>
+
+      {% else %}
+
+        <a href="{% url 'apuestas:registrar' %}" class="nav-register">Registrarse</a>
+
+        <a href="{% url 'login' %}" class="nav-login">Login</a>
+
+      {% endif %}
+
+    </div>
+
+  </nav>
+
+  {% if messages %}
+  <div class="messages-wrapper">
+    {% for message in messages %}
+      {% if 'success' in message.tags %}
+        <div class="msg msg-success">{{ message }}</div>
+      {% elif 'error' in message.tags %}
+        <div class="msg msg-error">{{ message }}</div>
+      {% else %}
+        <div class="msg msg-default">{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer>
+    <p>HatTrick House &copy; 2026 — Apuestas deportivas</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {% block scripts %}{% endblock %}
 
 </body>
 </html>

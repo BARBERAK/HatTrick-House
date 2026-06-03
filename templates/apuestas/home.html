@@ -3,48 +3,186 @@
 {% block title %}Inicio - HatTrick House{% endblock %}
 
 {% block content %}
+<style>
+  .hero-section {
+    padding: 20px 0 60px;
+  }
+
+  /* ── BUSCADOR ── */
+  .search-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+  }
+
+  .search-bar {
+    width: 100%;
+    max-width: 580px;
+    position: relative;
+  }
+
+  .search-form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: #fff;
+    border: 2px solid #c5d5ff;
+    border-radius: 50px;
+    padding: 6px 6px 6px 20px;
+    box-shadow: 0 4px 16px rgba(0, 90, 255, 0.1);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-form:focus-within {
+    border-color: #007BFF;
+    box-shadow: 0 4px 20px rgba(0, 90, 255, 0.2);
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    color: #222;
+    background: transparent;
+  }
+
+  .search-input::placeholder { color: #aab4cc; }
+
+  .search-button {
+    background: linear-gradient(90deg, #007BFF, #0056d2);
+    border: none;
+    border-radius: 40px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .search-button:hover { opacity: 0.88; transform: scale(1.04); }
+
+  .search-results {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 90, 255, 0.15);
+    z-index: 50;
+    overflow: hidden;
+  }
+
+  .search-result-item {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #222;
+    border-bottom: 1px solid #f0f4ff;
+    transition: background 0.15s;
+  }
+
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-item:hover { background: #f0f4ff; }
+  .search-result-title { font-weight: 600; font-size: 14px; }
+  .search-result-meta { font-size: 12px; color: #7a8aaa; margin-top: 2px; }
+
+  /* ── TÍTULO ── */
+  .section-label {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #007BFF;
+    margin-bottom: 32px;
+    opacity: 0.75;
+  }
+
+  /* ── FILA DE LIGAS ── */
+  .div-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .league-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 2px solid #e0e8ff;
+    border-radius: 16px;
+    width: 140px;
+    height: 140px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 90, 255, 0.07);
+  }
+
+  .league-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 90, 255, 0.18);
+    border-color: #007BFF;
+  }
+
+  .league-card img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    transition: transform 0.2s;
+  }
+
+  .league-card:hover img {
+    transform: scale(1.08);
+  }
+</style>
+
 <div class="hero-section">
 
-    <div class="search-wrapper">
-        <div class="search-bar">
-            <form action="#" method="get" class="search-form" onsubmit="return false;">
-                <input
-                    type="text"
-                    id="search-input"
-                    name="q"
-                    placeholder="Buscar equipos o partidos..."
-                    class="search-input"
-                    autocomplete="off"
-                >
-                <button type="button" class="search-button">🔎</button>
-            </form>
-        </div>
-
-        <div id="search-results" class="search-results"></div>
+  <div class="search-wrapper">
+    <div class="search-bar">
+      <form action="#" method="get" class="search-form" onsubmit="return false;">
+        <input type="text" id="search-input" name="q"
+          placeholder="Buscar equipos, partidos, ligas..."
+          class="search-input" autocomplete="off">
+        <button type="button" class="search-button">🔎</button>
+      </form>
+      <div id="search-results" class="search-results"></div>
     </div>
+  </div>
 
-    <div class="sports-categories">
-        <div class="div-grid">
-            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'la liga' %}" class="league-card">
-                <img src="{% static 'apuestas/img/laliga.png' %}" alt="La Liga">
-            </a>
-            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'premier league' %}" class="league-card">
-                <img src="{% static 'apuestas/img/premier_league.png' %}" alt="Premier League">
-            </a>
-            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'champions league' %}" class="league-card">
-                <img src="{% static 'apuestas/img/champions_league.png' %}" alt="Champions League">
-            </a>
-            <a href="{% url 'apuestas:partidos_liga' 'soccer' 'serie a' %}" class="league-card">
-                <img src="{% static 'apuestas/img/serie_a.png' %}" alt="Serie A">
-            </a>
-            <a href="{% url 'apuestas:partidos_liga' 'basketball' 'NBA' %}" class="league-card">
-                <img src="{% static 'apuestas/img/nba.png' %}" alt="NBA">
-            </a>
-            <a href="{% url 'apuestas:partidos_liga' 'tenis' 'tenis' %}" class="league-card">
-                <img src="{% static 'apuestas/img/tenis.png' %}" alt="Tenis">
-            </a>
-        </div>
+  <p class="section-label">Elige tu competición</p>
+
+  <div class="sports-categories">
+    <div class="div-grid">
+      <a href="{% url 'apuestas:partidos_liga' 'soccer' 'la liga' %}" class="league-card">
+        <img src="{% static 'apuestas/img/laliga.png' %}" alt="La Liga">
+      </a>
+      <a href="{% url 'apuestas:partidos_liga' 'soccer' 'premier league' %}" class="league-card">
+        <img src="{% static 'apuestas/img/premier_league.png' %}" alt="Premier League">
+      </a>
+      <a href="{% url 'apuestas:partidos_liga' 'soccer' 'champions league' %}" class="league-card">
+        <img src="{% static 'apuestas/img/champions_league.png' %}" alt="Champions League">
+      </a>
+      <a href="{% url 'apuestas:partidos_liga' 'soccer' 'serie a' %}" class="league-card">
+        <img src="{% static 'apuestas/img/serie_a.png' %}" alt="Serie A">
+      </a>
+      <a href="{% url 'apuestas:partidos_liga' 'basketball' 'NBA' %}" class="league-card">
+        <img src="{% static 'apuestas/img/nba.png' %}" alt="NBA">
+      </a>
+      <a href="{% url 'apuestas:partidos_liga' 'tenis' 'tenis' %}" class="league-card">
+        <img src="{% static 'apuestas/img/tenis.png' %}" alt="Tenis">
+      </a>
     </div>
+  </div>
+
 </div>
 {% endblock %}
 
@@ -57,55 +195,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     input.addEventListener("input", function () {
         const query = input.value.trim();
-
         clearTimeout(timeout);
-
         if (query.length === 0) {
             resultsBox.innerHTML = "";
             resultsBox.style.display = "none";
             return;
         }
-
         timeout = setTimeout(() => {
             fetch(`/buscar-partidos-ajax/?q=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     resultsBox.innerHTML = "";
-
                     if (data.results.length === 0) {
-                        resultsBox.innerHTML = `
-                            <div class="search-result-item">
-                                <div class="search-result-title">No se encontraron partidos</div>
-                            </div>
-                        `;
+                        resultsBox.innerHTML = `<div class="search-result-item"><div class="search-result-title">No se encontraron partidos</div></div>`;
                         resultsBox.style.display = "block";
                         return;
                     }
-
                     data.results.forEach(partido => {
                         const item = document.createElement("a");
                         item.classList.add("search-result-item");
                         item.href = partido.url;
-
                         item.innerHTML = `
                             <div class="search-result-title">${partido.home_team} vs ${partido.away_team}</div>
                             <div class="search-result-meta">${partido.league} · ${partido.game_date}</div>
                         `;
-
                         resultsBox.appendChild(item);
                     });
-
                     resultsBox.style.display = "block";
                 })
-                .catch(error => {
-                    console.error("Error en la búsqueda AJAX:", error);
-                });
+                .catch(error => console.error("Error AJAX:", error));
         }, 250);
     });
 
     document.addEventListener("click", function (e) {
-        const wrapper = document.querySelector(".search-wrapper");
-        if (wrapper && !wrapper.contains(e.target)) {
+        if (!document.querySelector(".search-bar").contains(e.target)) {
             resultsBox.style.display = "none";
         }
     });

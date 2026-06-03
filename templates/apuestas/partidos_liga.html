@@ -1,66 +1,181 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Partidos de {{ liga_seleccionada }} - HatTrick House{% endblock %}
 
 {% block content %}
+<style>
+  .partidos-completos {
+    padding: 20px 0 60px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .partidos-completos h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 32px;
+    letter-spacing: -0.3px;
+  }
+
+  /* ── FILAS DE PARTIDO ── */
+  .datos-completos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 2px solid #e0e8ff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    gap: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 90, 255, 0.07);
+  }
+
+  .datos-completos:hover {
+    border-color: #007BFF;
+    box-shadow: 0 4px 20px rgba(0, 90, 255, 0.18);
+  }
+
+  /* ── INFO DEL PARTIDO ── */
+  .partido-concreto {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dia-partido {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #007BFF;
+    opacity: 0.8;
+  }
+
+  .equipo-local,
+  .equipo-visitante {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .equipo-visitante::before {
+    content: 'vs ';
+    font-size: 11px;
+    font-weight: 400;
+    color: #888;
+  }
+
+  /* ── CUOTAS ── */
+  .cuota-partido {
+    display: flex;
+    gap: 6px;
+  }
+
+  .boton-cuota {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f5f7ff;
+    border: 2px solid #e0e8ff;
+    border-radius: 10px;
+    padding: 8px 14px;
+    min-width: 52px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+
+  .boton-cuota:hover {
+    background: #007BFF;
+    border-color: #007BFF;
+  }
+
+  .boton-cuota:hover .etiqueta,
+  .boton-cuota:hover .valor {
+    color: #fff;
+  }
+
+  .boton-cuota:active { transform: scale(0.97); }
+
+  .etiqueta {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #007BFF;
+    text-transform: uppercase;
+  }
+
+  .valor {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+    margin-top: 1px;
+  }
+</style>
 
 <div class="partidos-completos">
 
-    {% if categoria == 'soccer' %}
-        <h2>{{ liga_seleccionada }} ⚽️</h2>
-    {% elif categoria == 'basketball' %}
-        <h2>{{ liga_seleccionada }} 🏀</h2>
-    {% elif categoria == 'tenis' %}
-        <h2>{{ liga_seleccionada }} 🎾</h2>
-    {% endif %}
+  {% if categoria == 'soccer' %}
+    <h2>{{ liga_seleccionada }} ⚽️</h2>
+  {% elif categoria == 'basketball' %}
+    <h2>{{ liga_seleccionada }} 🏀</h2>
+  {% elif categoria == 'tenis' %}
+    <h2>{{ liga_seleccionada }} 🎾</h2>
+  {% endif %}
 
-    {% for partido in partidos %}
-    <div class="datos-completos" id="game-{{ partido.game_id }}">
+  {% for partido in partidos %}
+  <div class="datos-completos" id="game-{{ partido.game_id }}">
 
-        <div class="partido-concreto">
-            <span class="dia-partido"><strong>{{ partido.game_date|date:'D d M - H:i' }}</strong></span>
-            <span class="equipo-local">{{ partido.home_team }}</span>
-            <span class="equipo-visitante">{{ partido.away_team }}</span>
-        </div>
-
-        <div class="cuota-partido">
-            <div class="boton-cuota js-apuesta"
-                data-game-id="{{ partido.game_id }}"
-                data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
-                data-price="{{ partido.home_price }}"
-                data-selection="1">
-                <span class="etiqueta">1</span>
-                <span class="valor">{{ partido.home_price }}</span>
-            </div>
-
-            {% if partido.draw_price %}
-                <div class="boton-cuota js-apuesta"
-                    data-game-id="{{ partido.game_id }}"
-                    data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
-                    data-price="{{ partido.draw_price }}"
-                    data-selection="X">
-                    <span class="etiqueta">X</span>
-                    <span class="valor">{{ partido.draw_price }}</span>
-                </div>
-            {% else %}
-                <div class="boton-cuota">
-                    <span class="etiqueta">X</span>
-                    <span class="valor">-</span>
-                </div>
-            {% endif %}
-
-            <div class="boton-cuota js-apuesta"
-                data-game-id="{{ partido.game_id }}"
-                data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
-                data-price="{{ partido.away_price }}"
-                data-selection="2">
-                <span class="etiqueta">2</span>
-                <span class="valor">{{ partido.away_price }}</span>
-            </div>
-        </div>
-
+    <div class="partido-concreto">
+      <span class="dia-partido"><strong>{{ partido.game_date|date:'D d M - H:i' }}</strong></span>
+      <span class="equipo-local">{{ partido.home_team }}</span>
+      <span class="equipo-visitante">{{ partido.away_team }}</span>
     </div>
-    {% endfor %}
+
+    <div class="cuota-partido">
+      <div class="boton-cuota js-apuesta"
+          data-game-id="{{ partido.game_id }}"
+          data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
+          data-price="{{ partido.home_price }}"
+          data-selection="1">
+        <span class="etiqueta">1</span>
+        <span class="valor">{{ partido.home_price }}</span>
+      </div>
+
+      {% if partido.draw_price %}
+        <div class="boton-cuota js-apuesta"
+            data-game-id="{{ partido.game_id }}"
+            data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
+            data-price="{{ partido.draw_price }}"
+            data-selection="X">
+          <span class="etiqueta">X</span>
+          <span class="valor">{{ partido.draw_price }}</span>
+        </div>
+      {% else %}
+        <div class="boton-cuota">
+          <span class="etiqueta">X</span>
+          <span class="valor">-</span>
+        </div>
+      {% endif %}
+
+      <div class="boton-cuota js-apuesta"
+          data-game-id="{{ partido.game_id }}"
+          data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
+          data-price="{{ partido.away_price }}"
+          data-selection="2">
+        <span class="etiqueta">2</span>
+        <span class="valor">{{ partido.away_price }}</span>
+      </div>
+    </div>
+
+  </div>
+  {% endfor %}
+
 </div>
 
 {% include 'apuestas/bet_slip.html' %}
@@ -68,85 +183,75 @@
 {% endblock %}
 
 {% block scripts %}
-    {% if user.is_authenticated %}
-    <script>
-        $(document).ready(function () {
-            $('.js-apuesta').click(function () {
-                let gameId = $(this).data('game-id');
-                let match = $(this).data('match');
-                let price = parseFloat($(this).data('price'));
-                let selection = $(this).data('selection');
+  {% if user.is_authenticated %}
+  <script>
+    $(document).ready(function () {
+      
+      // ── AQUÍ SE AGREGA EL CIERRE DE LA CRUZ ──
+      $('#btn-cerrar-boleto').click(function() {
+        $('#cajon-boleto').slideUp(); 
+      });
 
-                let equipoSeleccionado = "";
-                let equipos = match.split(" vs ");
+      $('.js-apuesta').click(function () {
+        let gameId = $(this).data('game-id');
+        let match = $(this).data('match');
+        let price = parseFloat($(this).data('price'));
+        let selection = $(this).data('selection');
 
-                if (selection == "1") {
-                    equipoSeleccionado = equipos[0];
-                } else if (selection == "X") {
-                    equipoSeleccionado = "Empate";
-                } else if (selection == "2") {
-                    equipoSeleccionado = equipos[1];
-                }
+        let equipoSeleccionado = "";
+        let equipos = match.split(" vs ");
 
-                $('#boleto-partido').text(match);
-                $('#boleto-eleccion').text(equipoSeleccionado);
-                $('#boleto-cuota').text(price.toFixed(2));
+        if (selection == "1") {
+          equipoSeleccionado = equipos[0];
+        } else if (selection == "X") {
+          equipoSeleccionado = "Empate";
+        } else if (selection == "2") {
+          equipoSeleccionado = equipos[1];
+        }
 
-                $('#hidden-game-id').val(gameId);
-                $('#hidden-seleccion').val(selection);
-                $('#hidden-cuota').val(price);
+        $('#boleto-partido').text(match);
+        $('#boleto-eleccion').text(equipoSeleccionado);
+        $('#boleto-cuota').text(price.toFixed(2));
 
-                $('#cajon-boleto').slideDown();
-                $('#input-dinero').val('');
-                $('#boleto-ganancia').text('0.00 EUR');
-            });
+        $('#hidden-game-id').val(gameId);
+        $('#hidden-seleccion').val(selection);
+        $('#hidden-cuota').val(price);
 
-            $('#input-dinero').on('input', function () {
-                let quantity = parseFloat($(this).val());
-                let price = parseFloat($('#hidden-cuota').val());
+        $('#cajon-boleto').slideDown();
+        $('#input-dinero').val('');
+        $('#boleto-ganancia').text('0.00 EUR');
+      });
 
-                if (quantity > 0 && price > 0) {
-                    let profit = quantity * price;
-                    $('#boleto-ganancia').text(profit.toFixed(2) + ' EUR');
-                } else {
-                    $('#boleto-ganancia').text('0.00 EUR');
-                }
-            });
-        });
-    </script>
-    {% endif %}
+      $('#input-dinero').on('input', function () {
+        let quantity = parseFloat($(this).val());
+        let price = parseFloat($('#hidden-cuota').val());
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const hash = window.location.hash;
+        if (quantity > 0 && price > 0) {
+          let profit = quantity * price;
+          $('#boleto-ganancia').text(profit.toFixed(2) + ' EUR');
+        } else {
+          $('#boleto-ganancia').text('0.00 EUR');
+        }
+      });
+    });
+  </script>
+  {% endif %}
 
-            if (!hash || !hash.startsWith("#game-")) {
-                return;
-            }
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const hash = window.location.hash;
+      if (!hash || !hash.startsWith("#game-")) return;
 
-            const targetId = decodeURIComponent(hash.substring(1));
-            const objetivo = document.getElementById(targetId);
+      const targetId = decodeURIComponent(hash.substring(1));
+      const objetivo = document.getElementById(targetId);
+      if (!objetivo) return;
 
-            if (!objetivo) {
-                return;
-            }
-
-            setTimeout(() => {
-                objetivo.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-
-                objetivo.classList.add("partido-destacado");
-
-                objetivo.style.setProperty("border", "4px solid #ff7a00", "important");
-                objetivo.style.setProperty("background-color", "#fff3cd", "important");
-                objetivo.style.setProperty("box-shadow", "0 0 0 10px rgba(255, 122, 0, 0.28)", "important");
-
-                setTimeout(() => {
-                    objetivo.classList.add("partido-destacado-flash");
-                }, 50);
-            }, 300);
-        });
-    </script>
+      setTimeout(() => {
+        objetivo.scrollIntoView({ behavior: "smooth", block: "center" });
+        objetivo.style.setProperty("border", "4px solid #ff7a00", "important");
+        objetivo.style.setProperty("background-color", "#fff3cd", "important");
+        objetivo.style.setProperty("box-shadow", "0 0 0 10px rgba(255, 122, 0, 0.28)", "important");
+      }, 300);
+    });
+  </script>
 {% endblock %}
