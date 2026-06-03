@@ -21,6 +21,7 @@
             <span class="dia-partido"><strong>{{ partido.game_date|date:'D d M - H:i' }}</strong></span>
             <span class="equipo-local">{{ partido.home_team }}</span>
             <span class="equipo-visitante">{{ partido.away_team }}</span>
+            <a class="link-detalle" href="{% url 'apuestas:game_detail' partido.game_id %}">Ver detalle</a>
         </div>
 
         <div class="cuota-partido">
