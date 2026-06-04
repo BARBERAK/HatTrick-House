@@ -12,9 +12,7 @@
         <p><strong>Deporte:</strong> <span property="sport">{{ game.sport_key }}</span></p>
         <p><strong>Competición:</strong> {{ game.league }}</p>
         <p><strong>Fecha:</strong>
-            <time property="startDate" datetime="{{ game.game_date|date:'c' }}">
-                {{ game.game_date|date:'l d M Y - H:i' }}
-            </time>
+            <time property="startDate" content="{{ game.game_date|date:'c' }}" datetime="{{ game.game_date|date:'c' }}">{{ game.game_date|date:'l d M Y - H:i' }}</time>
         </p>
 
         <div class="detalle-equipos">
