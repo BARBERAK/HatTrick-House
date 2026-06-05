@@ -174,48 +174,6 @@
             </div>
         </div>
 
-    <div class="partido-concreto">
-      <span class="dia-partido"><strong>{{ partido.game_date|date:'D d M - H:i' }}</strong></span>
-      <span class="equipo-local">{{ partido.home_team }}</span>
-      <span class="equipo-visitante">{{ partido.away_team }}</span>
-    </div>
-
-    <div class="cuota-partido">
-      <div class="boton-cuota js-apuesta"
-          data-game-id="{{ partido.game_id }}"
-          data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
-          data-price="{{ partido.home_price }}"
-          data-selection="1">
-        <span class="etiqueta">1</span>
-        <span class="valor">{{ partido.home_price }}</span>
-      </div>
-
-      {% if partido.draw_price %}
-        <div class="boton-cuota js-apuesta"
-            data-game-id="{{ partido.game_id }}"
-            data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
-            data-price="{{ partido.draw_price }}"
-            data-selection="X">
-          <span class="etiqueta">X</span>
-          <span class="valor">{{ partido.draw_price }}</span>
-        </div>
-      {% else %}
-        <div class="boton-cuota">
-          <span class="etiqueta">X</span>
-          <span class="valor">-</span>
-        </div>
-      {% endif %}
-
-      <div class="boton-cuota js-apuesta"
-          data-game-id="{{ partido.game_id }}"
-          data-match="{{ partido.home_team }} vs {{ partido.away_team }}"
-          data-price="{{ partido.away_price }}"
-          data-selection="2">
-        <span class="etiqueta">2</span>
-        <span class="valor">{{ partido.away_price }}</span>
-      </div>
-    </div>
-
   </div>
   {% endfor %}
 
