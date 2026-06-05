@@ -1,22 +1,247 @@
-
-<div class="bet-slip" id="cajon-boleto" style="display: none;">
-    
-    <div class="info-partido-seleccionado">
-        <p id="boleto-partido">Ningún partido seleccionado</p>
-        <p>Tu elección: <strong id="boleto-eleccion">-</strong></p>
-    </div>
-
-    <form action="{% url 'apuestas:realizar_apuesta'%}" method="POST" class="form-apuesta-total">
-        {% csrf_token %}
-        <input type="hidden" name="game_id" id="hidden-game-id">
-        <input type="hidden" name="seleccion" id="hidden-seleccion">
-        <input type="hidden" name="cuota" id="hidden-cuota">
-
-        <p>Cuota: <strong id="boleto-cuota">0.00</strong></p>
-        
-        <p>Ganancia potencial: <strong id="boleto-ganancia">0.00 €</strong></p>
-        <input type="number" name="cantidad" id="input-dinero" class="input-cantidad-apostar" placeholder="Cantidad a Apostar (€)" min="0" required>
-        <input type="submit" class="boton-realizara-apuesta" value="REALIZAR APUESTA">
-    </form>
-
-</div>
+<style>
+    /* ── CONTENEDOR PRINCIPAL DEL BOLETO ── */
+    .bet-slip {
+      background: #fff;
+      border: 2px solid #007BFF;
+      border-radius: 18px;
+      padding: 22px;
+      max-width: 360px;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 12px 40px rgba(0, 90, 255, 0.2);
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+  
+    /* Cabecera del Boleto con espacio para la cruz */
+    .bet-slip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #f0f4ff;
+      padding-bottom: 8px;
+    }
+  
+    .bet-slip-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #007BFF;
+    }
+  
+    /* BOTÓN DE CIERRE (CRUZ) */
+    .btn-close-slip {
+      background: transparent;
+      border: none;
+      color: #aab4cc;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px 8px;
+      margin-right: -8px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s, background 0.15s;
+    }
+  
+    .btn-close-slip:hover {
+      color: #dc3545; /* Se vuelve roja al pasar el cursor */
+      background: #fff5f5;
+    }
+  
+    /* ── INFO DEL PARTIDO SELECCIONADO ── */
+    .info-partido-seleccionado {
+      margin-bottom: 16px;
+    }
+  
+    #boleto-partido {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111;
+      margin: 0 0 6px 0;
+      line-height: 1.4;
+    }
+  
+    .eleccion-ticket-badge {
+      font-size: 12px;
+      color: #555;
+      background: #f3f4f6;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      font-weight: 600;
+    }
+  
+    .eleccion-ticket-badge strong {
+      color: #007BFF;
+      font-weight: 700;
+    }
+  
+    /* ── FILA DE CUOTA Y CANTIDAD ── */
+    .form-apuesta-total {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+  
+    .ticket-row-data {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f5f7ff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #e0e8ff;
+    }
+  
+    .ticket-row-data p {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+    }
+  
+    .ticket-row-data strong {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+    }
+  
+    /* Input de Dinero */
+    .input-cantidad-apostar {
+      width: 100%;
+      box-sizing: border-box;
+      border: 2px solid #e0e8ff;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #111;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fff;
+    }
+  
+    .input-cantidad-apostar:focus {
+      border-color: #007BFF;
+      box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+    }
+  
+    .input-cantidad-apostar::placeholder {
+      color: #aab4cc;
+      font-weight: 400;
+    }
+  
+    /* Bloque de Ganancias */
+    .ticket-ganancia-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 2px;
+    }
+  
+    .ticket-ganancia-box span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+    }
+  
+    #boleto-ganancia {
+      font-size: 18px;
+      font-weight: 700;
+      color: #28a745;
+    }
+  
+    /* Botón Realizar Apuesta */
+    .boton-realizara-apuesta {
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(0, 123, 255, 0.3);
+      width: 100%;
+    }
+  
+    .boton-realizara-apuesta:hover {
+      background: #0056b3;
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    }
+  
+    .boton-realizara-apuesta:active {
+      transform: scale(0.98);
+    }
+  
+    @media (max-width: 480px) {
+      .bet-slip {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 100%;
+        border-radius: 18px 18px 0 0;
+        border: none;
+        border-top: 3px solid #007BFF;
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15);
+      }
+    }
+  </style>
+  
+  <div class="bet-slip" id="cajon-boleto" style="display: none;">
+      
+      <!-- Cabecera con título y Cruz de Cierre -->
+      <div class="bet-slip-header">
+          <span class="bet-slip-title">MI BOLETO</span>
+          <button type="button" class="btn-close-slip" id="btn-cerrar-boleto" aria-label="Cerrar boleto">&times;</button>
+      </div>
+      
+      <!-- Info del partido -->
+      <div class="info-partido-seleccionado">
+          <p id="boleto-partido">Ningún partido seleccionado</p>
+          <span class="eleccion-ticket-badge">Tu elección: <strong id="boleto-eleccion">-</strong></span>
+      </div>
+  
+      <!-- Formulario operativo -->
+      <form action="{% url 'apuestas:realizar_apuesta' %}" method="POST" class="form-apuesta-total">
+          {% csrf_token %}
+          <input type="hidden" name="game_id" id="hidden-game-id">
+          <input type="hidden" name="seleccion" id="hidden-seleccion">
+          <input type="hidden" name="cuota" id="hidden-cuota">
+  
+          <div class="ticket-row-data">
+              <p>Cuota global</p>
+              <strong id="boleto-cuota">0.00</strong>
+          </div>
+          
+          <input type="number" 
+                 name="cantidad" 
+                 id="input-dinero" 
+                 class="input-cantidad-apostar" 
+                 placeholder="Cantidad a Apostar (€)" 
+                 step="0.01" 
+                 min="0.10" 
+                 required 
+                 autocomplete="off">
+          
+          <div class="ticket-ganancia-box">
+              <span>Ganancia potencial</span>
+              <strong id="boleto-ganancia">0.00 €</strong>
+          </div>
+  
+          <button type="submit" class="boton-realizara-apuesta">
+            REALIZAR APUESTA
+          </button>
+      </form>
+  
+  </div>

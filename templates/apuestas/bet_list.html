@@ -1,38 +1,239 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Mis Apuestas - HatTrick House{% endblock %}
 
 {% block content %}
-    <div class="div-show-all-bets">
-        {% for bet in bets %}
-            <div class="div-show-specific-bet">
-                <div class="bet-info">
-                    <h3>{{ bet.game.home_team }} vs {{ bet.game.away_team }}</h3>
-                    {% if bet.selection == '1' %}
-                        <p>Elección: {{ bet.game.home_team }}</p>
-                    {% elif bet.selection == '2' %}
-                        <p>Elección: {{ bet.game.away_team }}</p>
-                    {% elif bet.selection == 'X'%}
-                        <p>Elección: Empate</p>
-                    {% endif %}
-                    <p>Cantidad: {{ bet.amount }} €</p>
-                    <p>Cuota: {{ bet.price }}</p>
-                    <p>Ganancias Potenciales: <strong>{{bet.potential_profit|floatformat:2}} €</strong></p>
-                </div>
-                <div class="bet-actions">
-                    <form action="{% url 'apuestas:eliminar_apuesta' bet.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" class="button-delete-bet" value="ELIMINAR APUESTA" onclick="return confirm('¿Estás seguro de que quieres cancelar esta apuesta y recuperar tu dinero?');">
-                    </form>
-                    
-                    {% comment %} <input type="submit" class="button-edit-bet" value="EDITAR APUESTA"> {% endcomment %}
-                    <a href="{% url 'apuestas:editar_apuesta' bet.id %}" class="button-edit-bet" style="display: inline-block; text-decoration: none; box-sizing: border-box;">EDITAR APUESTA</a>
-                </div>
-            </div>
-        {% empty %}
-        <p>No has realizado apuestas todavía.</p>
-        {% endfor %}
+<style>
+  .mis-apuestas-container {
+    padding: 20px 0 60px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
 
-    </div>
+  .mis-apuestas-container h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 32px;
+    letter-spacing: -0.3px;
+  }
 
+  /* ── CONTENEDOR DE TARJETAS ── */
+  .div-show-all-bets {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── TARJETA DE APUESTA ESPECÍFICA (Estilo datos-completos) ── */
+  .div-show-specific-bet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 2px solid #e0e8ff;
+    border-radius: 14px;
+    padding: 18px 24px;
+    gap: 20px;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 90, 255, 0.06);
+  }
+
+  .div-show-specific-bet:hover {
+    border-color: #007BFF;
+    box-shadow: 0 6px 20px rgba(0, 90, 255, 0.14);
+    transform: translateY(-2px);
+  }
+
+  /* ── INFO DE LA APUESTA ── */
+  .bet-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bet-info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+    margin: 0 0 2px 0;
+  }
+
+  /* Detalles del ticket alineados en fila */
+  .bet-details-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .detail-item strong {
+    color: #111;
+  }
+
+  /* Badge para la elección del usuario */
+  .eleccion-badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #007BFF;
+    background: #e8f0ff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: fit-content;
+  }
+
+  .ganancia-potencial {
+    font-size: 14px;
+    color: #28a745;
+    font-weight: 600;
+  }
+  
+  .ganancia-potencial strong {
+    font-size: 16px;
+    color: #28a745;
+    font-weight: 700;
+  }
+
+  /* ── ACCIONES (BOTONES) ── */
+  .bet-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  /* Botón Editar (Estilo secundario/azul) */
+  .button-edit-bet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f7ff;
+    border: 2px solid #e0e8ff;
+    color: #007BFF;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  }
+
+  .button-edit-bet:hover {
+    background: #007BFF;
+    border-color: #007BFF;
+    color: #fff;
+  }
+
+  .button-edit-bet:active { transform: scale(0.97); }
+
+  /* Botón Eliminar (Estilo peligro/rojo suave) */
+  .button-delete-bet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff5f5;
+    border: 2px solid #ffe3e3;
+    color: #dc3545;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  }
+
+  .button-delete-bet:hover {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+  }
+
+  .button-delete-bet:active { transform: scale(0.97); }
+
+  /* Estado Vacío */
+  .no-bets-message {
+    text-align: center;
+    padding: 40px;
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  /* Responsive para móviles */
+  @media (max-width: 680px) {
+    .div-show-specific-bet {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px;
+    }
+    .bet-actions {
+      width: 100%;
+      justify-content: flex-end;
+      border-top: 1px solid #f0f4ff;
+      padding-top: 14px;
+      margin-top: 4px;
+    }
+  }
+</style>
+
+<div class="mis-apuestas-container">
+  <h2>Mis Apuestas Activas 🎫</h2>
+
+  <div class="div-show-all-bets">
+    {% for bet in bets %}
+      <div class="div-show-specific-bet">
+        
+        <div class="bet-info">
+          <h3>{{ bet.game.home_team }} vs {{ bet.game.away_team }}</h3>
+          
+          <div class="eleccion-badge">
+            {% if bet.selection == '1' %}
+              Pronóstico: {{ bet.game.home_team }}
+            {% elif bet.selection == '2' %}
+              Pronóstico: {{ bet.game.away_team }}
+            {% elif bet.selection == 'X' %}
+              Pronóstico: Empate
+            {% endif %}
+          </div>
+
+          <div class="bet-details-row">
+            <span class="detail-item">Importe: <strong>{{ bet.amount }} €</strong></span>
+            <span class="detail-item">Cuota: <strong>{{ bet.price }}</strong></span>
+            <span class="detail-item ganancia-potencial">Ganancia Potencial: <strong>{{ bet.potential_profit|floatformat:2 }} €</strong></span>
+          </div>
+        </div>
+
+        <div class="bet-actions">
+          <a href="{% url 'apuestas:editar_apuesta' bet.id %}" class="button-edit-bet">EDITAR</a>
+          
+          <form action="{% url 'apuestas:eliminar_apuesta' bet.id %}" method="post" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="button-delete-bet" onclick="return confirm('¿Estás seguro de que quieres cancelar esta apuesta y recuperar tu dinero?');">
+              CANCELAR
+            </button>
+          </form>
+        </div>
+
+      </div>
+    {% empty %}
+      <div class="no-bets-message">
+        <p>No tienes apuestas activas en este momento. ¡Explora los partidos para empezar!</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

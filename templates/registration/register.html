@@ -2,35 +2,147 @@
 {% block title %} HatTrick House - Register {% endblock %}
 
 {% block content %}
+<style>
+  .register-container {
+    max-width: 460px;
+    margin: 80px auto;
+    padding: 45px 50px;
+    background: linear-gradient(135deg, #ffffff, #f0f4ff);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 90, 255, 0.12);
+    border-top: 5px solid #007BFF;
+  }
+
+  .register-container h2 {
+    text-align: center;
+    margin-bottom: 28px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #007BFF;
+    letter-spacing: 0.5px;
+  }
+
+  .register-container input[type="text"],
+  .register-container input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    margin-top: 5px;
+    margin-bottom: 6px;
+    border: 1.5px solid #c5d5ff;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f9ff;
+    color: #222;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  .register-container input[type="text"]:focus,
+  .register-container input[type="password"]:focus {
+    outline: none;
+    border-color: #007BFF;
+    background-color: #fff;
+  }
+
+  .div-register-user,
+  .div-register-password {
+    margin-bottom: 16px;
+  }
+
+  .div-register-errors {
+    background-color: #ffe5e5;
+    color: #cc0000;
+    border: 1px solid #ffb3b3;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .field-error {
+    color: #e00;
+    font-size: 12px;
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  .register-button {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(90deg, #007BFF, #0056d2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .register-button:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+
+  .nav-login-register {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #007BFF;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-login-register:hover {
+    color: #0044bb;
+    text-decoration: underline;
+  }
+</style>
+
 <div class="register-container">
-    <h2>Registrate</h2>
-    <form method="POST" class="form-register">
-        {% csrf_token %}
-        {% if form.errors %}
-            <div class="div-register-errors">
-                Por favor, revisa los errores de abajo.
-            </div>
-        {% endif %}
-        <div class="div-register-user">
-            {{form.username}}
-            {% if form.username.errors %}
-                <span style="color: red; font-size: 13px;">{{ form.username.errors.0 }}</span>
-            {% endif %}
-        </div>
-        <div class="div-register-password">
-            {{form.password1}}
-            {% if form.password1.errors %}
-                <p style="color: red; font-size: 13px;">{{ form.password1.errors.0 }}</p>
-            {% endif %}
-        </div>
-        <div class="div-register-password">
-            {{form.password2}}
-            {% if form.password2.errors %}
-                <p style="color: red; font-size: 13px;">{{ form.password2.errors.0 }}</p>
-            {% endif %}
-        </div>
-        <button type="submit" class="register-button">Registro</button>
-    </form>
-    <a href="{% url 'login' %}" class="nav-login-register">Ya tienes cuenta?</a>
+  <h2>⚽ Regístrate</h2>
+  <form method="POST" class="form-register">
+    {% csrf_token %}
+
+    {% if form.errors %}
+    <div class="div-register-errors">
+      Por favor, revisa los errores de abajo.
+    </div>
+    {% endif %}
+
+    <div class="div-register-user">
+      {{ form.username }}
+      {% if form.username.errors %}
+      <p class="field-error">{{ form.username.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <div class="div-register-password">
+      {{ form.password1 }}
+      {% if form.password1.errors %}
+      <p class="field-error">{{ form.password1.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <div class="div-register-password">
+      {{ form.password2 }}
+      {% if form.password2.errors %}
+      <p class="field-error">{{ form.password2.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <button type="submit" class="register-button">Registro</button>
+  </form>
+
+  <a href="{% url 'login' %}" class="nav-login-register">¿Ya tienes cuenta? Inicia sesión</a>
 </div>
+
 {% endblock %}

@@ -11,6 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.db.models import Q
 from django.urls import reverse
+from django.utils import timezone
+
 
 def home(request):
     """Home page view."""
@@ -225,13 +227,17 @@ def buscar_partidos_ajax(request):
         url_base = reverse("apuestas:partidos_liga", args=[categoria, nombre_liga])
         url = f"{url_base}?highlight={partido.game_id}#game-{partido.game_id}"
 
+        # Convertimos la hora UTC de la base de datos a la hora local ('Europe/Madrid')
+        fecha_local = timezone.localtime(partido.game_date)
+
         results.append({
             "game_id": partido.game_id,
             "home_team": partido.home_team,
             "away_team": partido.away_team,
             "league": partido.league,
-            "game_date": partido.game_date.strftime("%d/%m/%Y %H:%M"),
+            # Ahora el .strftime() formateará la hora local ya corregida
+            "game_date": fecha_local.strftime("%d/%m/%Y %H:%M"),
             "url": url,
         })
 
-    return JsonResponse({"results": results})
+    return JsonResponse({"results": [] if not results else results})
